@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Prototype Planner"
+  short_description: "Plan frontend implementation, task cards, and unit test case blueprints."
+  default_prompt: "Use $frontend-prototype-planner to turn this requirement prototype into an implementation-ready, verifiable frontend construction plan with task cards and unit test case planning when needed."

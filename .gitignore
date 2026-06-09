@@ -1,0 +1,41 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Node / frontend artifacts if this repository is opened in an editor or demo project
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.next/
+.nuxt/
+
+# Python validation caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Codex/local generated outputs
+.codex-cache/
+*.local.md
+*.generated.md
+
+# Optional generated test specs.
+# Keep commented by default because real projects often should commit tests.
+# Uncomment in a consuming project only when generated specs are temporary artifacts.
+# *.spec.ts
+# *.test.ts
