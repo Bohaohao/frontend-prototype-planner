@@ -1,6 +1,6 @@
 # Task Card Format
 
-Single authority for task card output. `SKILL.md` workflow step 11 defines when to produce task cards and how to split them; this file defines what each card must contain and look like.
+Single authority for task card output. `SKILL.md` Task Card Decomposition Mode defines when to produce task cards and how to split them; this file defines what each card must contain and look like.
 
 ## Field Enums
 

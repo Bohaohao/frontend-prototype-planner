@@ -34,7 +34,7 @@ Treat these as explicit implementation requests:
 
 Saving the plan, task cards, or test plan itself as a standalone Markdown document (for example under `docs/`) when the user explicitly asks to save or export it is a document deliverable, not implementation. Never touch source code, configuration, or dependency files for that purpose.
 
-If the wording is ambiguous, choose document output. Ask a concise clarification only when the next step would require modifying files and the user's intent is genuinely unclear. If running in a plan-only or read-only mode (such as Claude Code Plan Mode or a read-only approval mode), only plan and never modify files.
+If wording is ambiguous, choose document output and mark assumptions. Ask one concise clarification only when ambiguity would materially change the deliverable's correctness, task ownership, task count, implementation strategy, or when the next step would require modifying files.
 
 This boundary applies to every workflow step and mode below. Mode sections do not restate it.
 
@@ -70,7 +70,7 @@ Scaling rules:
 
 - Always include the core sections: source materials, source coverage audit, project context, requirement overview and decomposition, technical implementation directions for non-trivial features, data and API needs, interaction states, acceptance test matrix, risks, and assumptions.
 - Include other sections only when they have real content at the chosen scale. Use the Section Applicability table in `references/output-template.md`.
-- At `system` scale, the engineering matrices listed in workflow step 9 are mandatory even when source material is incomplete; fill them with assumptions, confidence, risks, and missing inputs.
+- At `system` scale, the sections marked `System Mandatory` in `references/output-template.md` are mandatory even when source material is incomplete; fill them with assumptions, confidence, risks, and missing inputs.
 - Below `system` scale, omit sections that would contain only assumption filler. End the plan with a one-line list of omitted sections and why each was omitted.
 - If the user explicitly requests specific sections or the full output template, the user's request overrides these scale-based omission rules.
 - State the chosen scale at the start of the plan.
@@ -199,6 +199,16 @@ Use confidence values consistently:
 - `Low`: weak inference, missing source material, or a decision that should be confirmed before implementation.
 - `Assumption` 默认不高于 `Medium` unless later confirmed by source material.
 
+#### Plan Revision Rules
+
+When revising an existing plan, preserve published IDs.
+
+- Do not renumber existing IDs.
+- Do not reuse IDs from removed or deprecated items.
+- Add new items with the next available number in that ID family.
+- Keep removed items only when needed for traceability and mark them as `Deprecated`.
+- Include a revision summary with Added / Changed / Deprecated IDs when the user asks to refine, update, or split an existing plan.
+
 ### 5. Produce A Fine-Grained Functional Inventory
 
 Create a normalized feature inventory covering:
@@ -304,25 +314,7 @@ Include Do Not Extract Yet items when appropriate. Explain what should not be ab
 
 ### 9. Add Required Engineering Matrices
 
-At `system` scale — complex business systems such as supply chain, approval, order, work order, finance, publishing, inventory, or admin platforms — include these matrices even when the source is incomplete:
-
-- Source Coverage Audit
-- Implementation Readiness
-- State Machine Design
-- Permission Matrix
-- Data Model Design
-- Enum Design
-- Page Detail
-- Feature Technical Implementation Direction
-- Option Matrix
-- Component Extraction Plan
-- Do Not Extract Yet
-- API Contract Drafts
-- Mock And Integration Strategy
-- Acceptance Test Matrix
-- Milestone Plan
-- Suggested File Structure
-- Non-Functional Requirements
+At `system` scale — complex business systems such as supply chain, approval, order, work order, finance, publishing, inventory, or admin platforms — include every section marked `System Mandatory` in `references/output-template.md`.
 
 If a matrix has insufficient source material at `system` scale, still include it with assumptions, confidence, risks, and missing inputs. At smaller scales, follow the Plan Scale rules instead.
 
@@ -351,6 +343,8 @@ Include TypeScript DTO or interface examples when useful. Use existing project t
 When the user asks to split, decompose, arrange, or convert the analyzed requirements into implementation task cards, generate executable task cards as part of this skill.
 
 Before outputting any task card, read `references/task-card-format.md`. It is the single authority for required fields, field enums, the per-card format, field quality requirements, and acceptance criteria examples.
+
+Direct output skips the full construction plan document, not the analysis. For fresh input, still run a compact version of source reading, source coverage audit, project context detection, and requirement decomposition before splitting tasks.
 
 #### Task Target Resolution
 
@@ -403,6 +397,8 @@ Split tasks in dependency order:
 
 Prefer disjoint write scopes when tasks may run in parallel. Explicitly mark tasks that can be implemented in parallel after their dependencies are done.
 
+If the split would exceed 20 task cards, first output a task index, dependency graph or dependency table, and the P0/MVP task cards. Predeclare the remaining task ID ranges and continue in later rounds without renumbering.
+
 #### Task Card Acceptance Criteria Rules
 
 Acceptance criteria must be observable and testable. Follow the good and bad examples in `references/task-card-format.md`. Never accept vague criteria such as "页面效果良好" or "交互正常".
@@ -425,7 +421,7 @@ If the user asks for project management style output, include both:
 - Never output only milestone bullets or a summary task table when the user requested task cards.
 - Never replace detailed task cards with a compact table for brevity.
 - Never use vague task titles such as "完善页面", "处理交互", "优化样式", or "对接接口" without precise scope, implementation instructions, and acceptance criteria.
-- If response length is constrained, prioritize detailed task cards over lower-priority architecture sections. Omit optional planning sections before omitting required task-card fields. When even that is not enough, switch to the Oversized Plans delivery split in workflow step 14 instead of omitting required content.
+- If response length is constrained, prioritize detailed task cards over lower-priority architecture sections. Omit optional planning sections before omitting required task-card fields. When even that is not enough, switch to the Oversized Plans delivery split in Output The Construction Plan mode instead of omitting required content.
 
 ### 12. Unit Test Case Generation Mode
 
@@ -434,6 +430,8 @@ When the user asks for unit test cases, component test cases, `.spec.ts` plannin
 Default boundary per the Execution Boundary: output test design, test file planning, test task cards, and test code plans only.
 
 Before outputting the test plan, read `references/test-plan-template.md`. It is the single authority for recommended test stacks per framework, spec file naming conventions, per-case required fields, the Git Ignore Note, and the Unit Test Case Plan output structure.
+
+Direct output skips the full construction plan document, not test context detection or requirement linkage. For fresh input, still inspect the project context and map test targets back to source requirements or task IDs.
 
 #### Test Context Detection
 
@@ -531,8 +529,11 @@ The document must be optimized for AI continuation:
 
 If the full plan would not fit in a single response — very large PRDs, many modules, `system` scale with full matrices — do not silently truncate tables or drop required fields. Instead:
 
-1. State the delivery split first, then deliver the plan module by module or section group by section group across consecutive responses, starting with the core sections and the highest-risk technical directions.
-2. Or offer to save the plan as one or more standalone Markdown document files, which is allowed per the Execution Boundary when the user explicitly agrees.
+1. First deliver Source Materials, Source Coverage Audit, Project Context, Requirement Overview, Risks And Open Questions, and a Delivery Split Plan.
+2. Predefine cross-round ID ranges for pages, flows, technical directions, APIs, tasks, cases, risks, and assumptions before detailed module delivery starts.
+3. Continue by module or page group across consecutive responses, preserving the predefined IDs.
+4. End every round with a `Delivery Progress` table listing delivered sections, pending sections, deferred ID ranges, and blockers.
+5. Or offer to save the plan as one or more standalone Markdown document files, which is allowed per the Execution Boundary when the user explicitly agrees.
 
 ## Quality Bar
 
@@ -543,6 +544,6 @@ Before finalizing, verify these grouped checks:
 3. Stack fit: the plan follows the detected project stack and conventions when a project exists; the recommended stack is justified when none exists; no duplicate frameworks or test stacks are introduced.
 4. Depth: every non-trivial feature and every extracted technical concept has a technical implementation direction with an explicit frontend/backend boundary, or is explicitly marked out of scope; every technical decision with multiple plausible routes has an option matrix, and single-route decisions explain why alternatives are not practical.
 5. Traceability: stable IDs are used throughout; every inferred route, API, component, state, enum, or file path carries source and confidence; assumptions are separated from confirmed requirements; technical directions link to APIs, components, states or enums, and acceptance cases.
-6. Scale completeness: all sections required by the chosen Plan Scale are present with real content; at `system` scale the step 9 matrices are all included; pages have regions, components, actions, and data dependencies; forms have fields and validation; state-heavy entities have state machines; permission-heavy actions have a permission matrix; component extraction states what not to abstract yet.
+6. Scale completeness: all sections required by the chosen Plan Scale are present with real content; at `system` scale the System Mandatory sections are all included; pages have regions, components, actions, and data dependencies; forms have fields and validation; state-heavy entities have state machines; permission-heavy actions have a permission matrix; component extraction states what not to abstract yet.
 7. Task executability: task cards follow the required format with all fields filled; scope resolution matches the user's wording; cards are dependency-ordered with parallelization guidance; acceptance criteria are observable and testable; another AI agent could implement each card without rereading the full prototype.
 8. Test quality: test plans reuse the detected test stack or recommend the matching defaults; every `.spec.ts` explains what it tests rather than appearing only in a summary table; unit tests are separated from E2E, visual regression, and manual QA; specs link back to actual task IDs and requirement IDs from the conversation.

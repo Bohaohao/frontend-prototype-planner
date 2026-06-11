@@ -1,41 +1,52 @@
 # Construction Plan Output Template
 
-Single authority for the full construction plan structure. `SKILL.md` workflow step 14 defines when to produce the plan and how to size it via Plan Scale; this file defines the section layout and table schemas.
+Single authority for the full construction plan structure. `SKILL.md` Output The Construction Plan mode defines when to produce the plan and how to size it via Plan Scale; this file defines the section layout and table schemas.
 
 ## Section Applicability
 
 Include a section only when the chosen Plan Scale and its condition apply. `all` means every scale. `page+`, `module+` mean that scale and larger.
 
-| # | Section | Scale | Condition |
-| --- | --- | --- | --- |
-| 1 | Source Materials | all | Always |
-| 2 | Source Coverage Audit | all | Always |
-| 3 | Project Context | all | Always |
-| 4 | Implementation Readiness | module+ | Earlier when real blockers exist |
-| 5 | Requirement Overview | all | Always; 5.3 Core Flows from `page` up |
-| 6 | Requirement Decomposition | all | Always |
-| 7 | Page And Route Design | page+ | — |
-| 8 | Page Detail | page+ | — |
-| 9 | Feature Technical Implementation Direction | all | When any non-trivial feature exists |
-| 10 | Component Extraction Plan | page+ | At `component` scale only when extraction is the question |
-| 11 | Form Design | all | When forms exist |
-| 12 | Data Model Design | page+ | When data entities exist |
-| 13 | Enum Design | page+ | When enums or status values exist |
-| 14 | State Machine Design | all | When state-heavy entities exist; mandatory at `system` |
-| 15 | Permission Matrix | all | When permission-controlled actions exist; mandatory at `system` |
-| 16 | Data And API Design | all | Always |
-| 17 | State And Communication Design | page+ | — |
-| 18 | Interaction States | all | Always |
-| 19 | Mock And Integration Strategy | page+ | — |
-| 20 | Non-Functional Requirements | module+ | Earlier when the source states NFRs |
-| 21 | Performance And Maintainability | module+ | Earlier when data-heavy UI exists |
-| 22 | Suggested File Structure | page+ | — |
-| 23 | Milestone Plan | module+ | — |
-| 24 | Implementation Task Breakdown | module+ | Any scale when the user asks for tasks |
-| 25 | Unit Test Case Plan | — | When the user asks for tests; optional at module+ |
-| 26 | Acceptance Test Matrix | all | Always |
-| 27 | Risks And Open Questions | all | Always |
-| 28 | Assumptions | all | Always |
+| # | Section | Scale | Condition | System Mandatory |
+| --- | --- | --- | --- | --- |
+| 1 | Source Materials | all | Always | Yes |
+| 2 | Source Coverage Audit | all | Always | Yes |
+| 3 | Project Context | all | Always | Yes |
+| 4 | Implementation Readiness | module+ | When real blockers exist | Yes |
+| 5 | Requirement Overview | all | Always; 5.3 Core Flows from `page` up | Yes |
+| 6 | Requirement Decomposition | all | Always | Yes |
+| 7 | Page And Route Design | page+ | — | No |
+| 8 | Page Detail | page+ | — | Yes |
+| 9 | Feature Technical Implementation Direction | all | When any non-trivial feature exists | Yes |
+| 10 | Component Extraction Plan | page+ | At `component` scale only when extraction is the question | Yes |
+| 11 | Form Design | all | When forms exist | No |
+| 12 | Data Model Design | page+ | When data entities exist | Yes |
+| 13 | Enum Design | page+ | When enums or status values exist | Yes |
+| 14 | State Machine Design | all | When state-heavy entities exist | Yes |
+| 15 | Permission Matrix | all | When permission-controlled actions exist | Yes |
+| 16 | Data And API Design | all | Always | Yes |
+| 17 | State And Communication Design | page+ | — | No |
+| 18 | Interaction States | all | Always | No |
+| 19 | Mock And Integration Strategy | page+ | — | Yes |
+| 20 | Non-Functional Requirements | module+ | When the source states NFRs | Yes |
+| 21 | Performance And Maintainability | module+ | When data-heavy UI exists | No |
+| 22 | Suggested File Structure | page+ | — | Yes |
+| 23 | Milestone Plan | module+ | — | Yes |
+| 24 | Implementation Task Breakdown | module+ | Any scale when the user asks for tasks | No |
+| 25 | Unit Test Case Plan | — | When the user asks for tests; optional at module+ | No |
+| 26 | Acceptance Test Matrix | all | Always | Yes |
+| 27 | Risks And Open Questions | all | Always | Yes |
+| 28 | Assumptions | all | Always | No |
+
+For `component` scale, the minimum useful section set is Source Materials, Source Coverage Audit, Project Context, Requirement Overview, Requirement Decomposition, Feature Technical Implementation Direction when non-trivial, Component Extraction Plan when extraction is the question, Interaction States, Acceptance Test Matrix, Risks And Open Questions, and Assumptions.
+
+Plan Scale signals:
+
+| Scale | Typical Signals |
+| --- | --- |
+| component | One component, one widget, or one small interaction with limited local state. |
+| page | One page, route, or short flow with several regions and shared page state. |
+| module | Multi-page feature area, multiple roles, API contracts, permissions, or milestones. |
+| system | Cross-module business system with state machines, permission-heavy actions, many entities, or long delivery phases. |
 
 Keep the section numbering from this template even when sections are omitted, and list omitted sections with reasons at the end of the plan as required by Plan Scale.
 
@@ -235,6 +246,12 @@ src/
 ### 24.3 Executable Task Cards
 
 Output one detailed section per task card using the Detailed Task Card Format from `references/task-card-format.md`, with all required fields filled. Do not use a single wide task table unless the user explicitly asks for a compact summary.
+
+When the full split would exceed 20 task cards, first deliver a task index, dependency graph or dependency table, and the P0/MVP task cards. Continue remaining cards in later rounds while preserving predeclared task IDs.
+
+### 24.4 Minimal Deliverable Slice
+
+List the smallest useful implementation path using task IDs, including required foundation, page shell, primary interaction, integration or mock boundary, and verification tasks.
 
 ## 25. Unit Test Case Plan
 

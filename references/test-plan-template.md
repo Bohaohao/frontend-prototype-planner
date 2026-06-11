@@ -1,6 +1,6 @@
 # Unit Test Plan Template And Stack Defaults
 
-Single authority for unit test plan output. `SKILL.md` workflow step 12 defines when to produce the test plan and how to detect project context; this file defines the recommended stacks, naming conventions, per-case fields, and output structure.
+Single authority for unit test plan output. `SKILL.md` Unit Test Case Generation Mode defines when to produce the test plan and how to detect project context; this file defines the recommended stacks, naming conventions, per-case fields, and output structure.
 
 ## Framework Reuse Rule
 
