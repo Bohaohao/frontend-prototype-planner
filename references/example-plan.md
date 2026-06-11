@@ -27,10 +27,10 @@ The example assumes: `page` scale, an existing Vue 3 + Vite + TypeScript admin p
 - Component / composable / service split: 按钮留在页头组件；请求与计数逻辑放 `useNotifications()`；API 调用放 `notificationService`。
 - Backend dependency: 需要幂等的批量已读接口；前端不逐条循环调用。
 - Technical option matrix:
-  | Decision Area | Option | How It Works | Pros | Cons | Decision For This Project | Decision Rationale |
-  | --- | --- | --- | --- | --- | --- | --- |
-  | 已读刷新 | 本地更新 | 成功后改 store | 无闪烁、省请求 | 与服务端可能短暂不一致 | 选用 | 列表数据本页自有，偏差窗口小 |
-  | 已读刷新 | 重新拉取 | 成功后 refetch | 强一致 | 闪烁、多一次请求 | 不选用 | 体验差，收益小 |
+  | Decision Area | Option | How It Works | Pros | Cons | Prerequisites | Cost | Risks | Recommended When | Decision For This Project | Decision Rationale |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | 已读刷新 | 本地更新 | 成功后改 store | 无闪烁、省请求 | 与服务端可能短暂不一致 | API 成功语义明确 | S | 失败回滚遗漏会造成假已读 | 本页数据可局部更新且偏差窗口小 | 选用 | 列表数据本页自有，偏差窗口小 |
+  | 已读刷新 | 重新拉取 | 成功后 refetch | 强一致 | 闪烁、多一次请求 | 列表接口稳定可重拉 | S | 高频操作时请求增加 | 服务端计算结果复杂或本地无法可靠合并 | 不选用 | 体验差，收益小 |
 - Edge cases: 请求失败回滚角标；列表为空时按钮禁用。
 - Linked APIs: API-002；Linked components: COMP-002；Acceptance checks: CASE-003。
 - Source: Explicit（功能本身）+ Engineering Recommendation（刷新策略）
@@ -65,7 +65,7 @@ The example assumes: `page` scale, an existing Vue 3 + Vite + TypeScript admin p
 | Related Requirements | RULE-001, RULE-002 |
 | Related Tasks | TASK-003 |
 | Mock Data | 22 条通知（含 3 条未读、2 种类型），错误响应一份 |
-| Test Cases | CASE-101 渲染 20 条且倒序（P0）；CASE-102 类型筛选后仅显示该类型（P0）；CASE-103 请求失败显示错误态并可重试（P1） |
+| Test Cases | CASE-U-001 渲染 20 条且倒序（P0）；CASE-U-002 类型筛选后仅显示该类型（P0）；CASE-U-003 请求失败显示错误态并可重试（P1） |
 | Assertions | 行数、首行时间、筛选后行内容、错误文案与重试按钮存在 |
 | Edge Cases | 空列表显示空态；恰好 20 条时无第二页 |
 | Verification Command | `npm run test:unit` |

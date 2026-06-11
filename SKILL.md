@@ -176,6 +176,7 @@ Use stable IDs for requirement items so later agents can reference them:
 - `API-001`
 - `MOCK-001`
 - `CASE-001`
+- `MILE-001`
 - `TASK-001`
 - `SPEC-001`
 - `RISK-001`
@@ -190,6 +191,13 @@ Use source types such as:
 - `Existing Project`: detected from the current codebase
 - `Engineering Recommendation`: proposed by the planner
 - `Assumption`: inferred and needs confirmation
+
+Use confidence values consistently:
+
+- `High`: directly supported by explicit source material, inspected visual evidence, or detected project context.
+- `Medium`: reasonable engineering inference from partial source material, common frontend conventions, or a small gap.
+- `Low`: weak inference, missing source material, or a decision that should be confirmed before implementation.
+- `Assumption` 默认不高于 `Medium` unless later confirmed by source material.
 
 ### 5. Produce A Fine-Grained Functional Inventory
 

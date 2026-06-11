@@ -214,8 +214,8 @@ src/
 | --- | --- | --- |
 
 ## 23. Milestone Plan
-| Phase | Goal | Tasks | Deliverable | Can Demo |
-| --- | --- | --- | --- | --- |
+| ID | Phase | Goal | Tasks | Deliverable | Can Demo |
+| --- | --- | --- | --- | --- | --- |
 
 ## 24. Implementation Task Breakdown
 

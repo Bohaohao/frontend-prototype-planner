@@ -56,7 +56,7 @@ When planning generated `.spec.ts` files, include a Git Ignore Note in the plan.
 
 Each test case must include:
 
-- Case ID: use the `CASE-` prefix and keep IDs unique across the whole plan, including the acceptance test matrix
+- Case ID: use `CASE-U-001` for unit/component cases, `CASE-I-001` for integration cases, and `CASE-E2E-001` for E2E or browser QA follow-ups. Reserve `CASE-001` for the construction plan acceptance test matrix. Keep IDs unique across the whole plan.
 - Tested object
 - Test type: `data`, `service`, `composable`, `component`, `page integration`, or `policy`
 - Mock data
@@ -64,6 +64,8 @@ Each test case must include:
 - Assertions
 - Priority: `P0`, `P1`, `P2`
 - Whether it depends on test environment configuration
+
+At spec level, `Tested Object`, `Test Type`, and `Mock Data` describe the default scope for that `.spec` file. Individual cases may override those values only when the exception is explicit in the `Test Cases` field.
 
 ## Unit Test Case Plan Structure
 

@@ -87,6 +87,7 @@ When task cards are the primary deliverable and no full construction plan was re
 ## 1. Task Target
 - Target scope:
 - Scope resolution rule:
+- Default granularity:
 - Source requirement IDs:
 - Assumptions:
 
@@ -101,10 +102,10 @@ When task cards are the primary deliverable and no full construction plan was re
 State the smallest useful implementation path using task IDs.
 
 ## 5. Acceptance Test Matrix
-| Case ID | Scenario | Steps | Expected Result | Priority |
-| --- | --- | --- | --- | --- |
+| Case ID | Scenario | Preconditions | Steps | Expected Result | Priority |
+| --- | --- | --- | --- | --- | --- |
 
 ## 6. Risks And Open Questions
-| ID | Type | Description | Impact | Blocking |
-| --- | --- | --- | --- | --- |
+| ID | Type | Description | Impact | Suggested Resolution | Blocking | Source | Confidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 ```
