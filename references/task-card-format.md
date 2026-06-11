@@ -16,8 +16,10 @@ Single authority for task card output. `SKILL.md` Task Card Decomposition Mode d
 
 - Priority: `P0`, `P1`, `P2`
 - Estimated complexity: `S`, `M`, `L`
-- Task type: `foundation`, `page`, `component`, `service`, `state`, `interaction`, `api`, `mock`, `test`, `integration`, `polish`
+- Estimated complexity mapping: `S` up to 0.5 working day; `M` 0.5 to 1 working day; `L` 1 to 1.5 working days. If a task exceeds 1.5 working days, split it further unless the user requests coarse planning.
+- Task type: `foundation`, `data`, `page`, `component`, `service`, `state`, `interaction`, `api`, `mock`, `test`, `integration`, `polish`
 - Owner recommendation: `frontend-agent`, `integration-agent`, `visual-agent`, `test-agent`
+- Owner roles: `frontend-agent` for page, component, interaction, state, and UI implementation; `integration-agent` for API integration, DTO alignment, mock-to-real switching, and error-code mapping; `visual-agent` for visual QA, responsive behavior, accessibility basics, and browser verification; `test-agent` for unit/component test planning or implementation tasks.
 
 ## Required Fields
 
@@ -31,6 +33,7 @@ Every task card must include:
 - Scope boundary
 - Source requirement IDs or page/module IDs
 - Dependencies
+- Write scope files
 - Inputs required
 - Implementation instructions
 - Deliverables
@@ -52,6 +55,7 @@ Every detailed task card must use this format:
 | Scope Boundary | Included scope and explicitly excluded scope. |
 | Source IDs | PAGE-001, REGION-001, API-001 |
 | Dependencies | TASK-001, TASK-002 |
+| Write Scope Files | Files this task may create or modify. If exact files are unknown, list expected paths and mark them as assumptions. |
 | Inputs Required | Concrete data, routes, DTOs, APIs, design references, assets, or decisions needed. |
 | Implementation Instructions | Concrete implementation guidance, including suggested files, components, services, composables, state, and important edge cases when project context is available. |
 | Deliverables | Concrete artifacts such as components, services, types, mocks, styles, routes, tests, docs, or configuration. |
@@ -64,10 +68,11 @@ Every detailed task card must use this format:
 ## Field Quality Requirements
 
 - `Scope Boundary` must say what the task owns and what it must not implement.
+- `Write Scope Files` must list file-level ownership. If two tasks write the same file, mark them as serial dependencies rather than parallel tasks.
 - `Inputs Required` must name concrete source data, DTOs, assets, routes, APIs, or design references.
 - `Implementation Instructions` must be specific enough for an AI coding agent to start without rereading the whole prototype.
 - `Deliverables` must name actual artifacts, not activities.
-- `Acceptance Criteria` must include at least 3 checkable criteria for `M` or `L` tasks and at least 2 for `S` tasks.
+- `Acceptance Criteria` must include at least one observable criterion. `M` and `L` tasks should usually include 3 or more, and `S` tasks should usually include 2 or more. If a task naturally has only one meaningful criterion, state why instead of inventing filler.
 - `Verification Method` must include at least one automated check when the project has scripts; otherwise include concrete browser or manual verification steps.
 - `Parallelization Notes` must identify blockers and whether write scopes are disjoint.
 

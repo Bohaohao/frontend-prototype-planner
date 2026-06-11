@@ -34,6 +34,8 @@ Treat these as explicit implementation requests:
 
 Saving the plan, task cards, or test plan itself as a standalone Markdown document (for example under `docs/`) when the user explicitly asks to save or export it is a document deliverable, not implementation. Never touch source code, configuration, or dependency files for that purpose.
 
+When saving a document deliverable and no path is specified, prefer `docs/` in the current workspace or ask for a path if `docs/` would be misleading. Do not place planning documents under `src/`.
+
 If wording is ambiguous, choose document output and mark assumptions. Ask one concise clarification only when ambiguity would materially change the deliverable's correctness, task ownership, task count, implementation strategy, or when the next step would require modifying files.
 
 This boundary applies to every workflow step and mode below. Mode sections do not restate it.
@@ -400,7 +402,7 @@ Each test case must include the per-case required fields defined in `references/
 
 If construction task cards already exist in the conversation, derive the unit test plan from the actual cards and preserve their task IDs and requirement IDs. Map every spec file and major test case back to the related task IDs and requirement IDs when available.
 
-When grouping specs, map by task type rather than task number: `foundation` and `service` tasks map to data, service, and mock specs; `page` tasks map to page integration specs; `component` tasks map to component specs; `state` tasks map to policy and state specs; `integration` tasks map to DTO mapping specs.
+When grouping specs, map by task type rather than task number: `data`, `foundation`, and `service` tasks map to data, service, and mock specs; `page` tasks map to page integration specs; `component` tasks map to component specs; `state` tasks map to policy and state specs; `integration` tasks map to DTO mapping specs.
 
 Never assume a fixed task numbering scheme. Always use the task IDs that actually exist in the conversation.
 

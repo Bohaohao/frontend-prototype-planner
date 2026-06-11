@@ -46,13 +46,33 @@ The example assumes: `page` scale, an existing Vue 3 + Vite + TypeScript admin p
 | Scope Boundary | 实现 `NotificationList` 组件：列表渲染、类型筛选、分页、空/加载/错误态。不含详情抽屉（TASK-004）、不含全部已读按钮（TASK-005）。 |
 | Source IDs | PAGE-001, REGION-002, RULE-001, API-001 |
 | Dependencies | TASK-001（类型与 mock）, TASK-002（页面壳） |
+| Write Scope Files | `src/views/notification/components/NotificationList.vue`; `src/views/notification/useNotifications.ts` 列表逻辑段。 |
 | Inputs Required | `NotificationDto` 类型（TASK-001 产出）、API-001 mock 数据、Element Plus 表格与分页组件 |
 | Implementation Instructions | 新建 `src/views/notification/components/NotificationList.vue`；数据来自 `useNotifications()`；筛选项用 ENUM-001；分页参数走路由 query 以支持刷新保留；未读行加粗样式。 |
 | Deliverables | `NotificationList.vue`、`useNotifications.ts` 中列表相关逻辑、对应样式 |
 | Acceptance Criteria | 1) 访问 `/notifications` 默认展示 20 条倒序数据；2) 切换类型筛选后列表与 URL query 同步更新；3) mock 返回错误时显示错误态和重试按钮。 |
 | Verification Method | `npm run build` 无 TS 错误；浏览器访问 `/notifications` 核对三条验收标准；mock 切换错误响应验证错误态。 |
-| Parallelization Notes | 可与 TASK-004、TASK-005 并行；写入范围限于 `components/NotificationList.vue` 与 `useNotifications.ts` 列表段。 |
+| Parallelization Notes | 可与 TASK-004、TASK-005 并行；不得改动详情抽屉或全部已读按钮文件。 |
 | Owner Recommendation | frontend-agent |
+
+## Example: Component-Scale Minimal Contrast
+
+For a `component` scale request, keep the plan small but still traceable:
+
+- Include: Source Materials, Source Coverage Audit, Project Context, Requirement Overview, Requirement Decomposition, Feature Technical Implementation Direction when non-trivial, Component Extraction Plan when extraction is the question, Interaction States, Acceptance Test Matrix, Risks And Open Questions, Assumptions.
+- Omit with reasons: Milestone Plan, Suggested File Structure, full API drafts, and system matrices when they would only repeat assumptions.
+
+## Example: State Machine Calibration
+
+| ID | Entity | Current State | Page / Location | Available Action | Permission | Next State | Side Effects | Source | Confidence | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| STATE-001 | 通知 | unread | 列表行、详情抽屉 | 打开详情 | `notification:read` | read | 调用 API-003，更新 unreadCount | Explicit + Engineering Recommendation | Medium | PRD 写已读状态，打开详情触发需确认 |
+
+## Example: Permission Matrix Calibration
+
+| Permission ID | Action | Page | Entity State | Visible | Enabled | Backend Required | Source | Confidence | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PERM-001 | 全部已读 | PAGE-001 | any unread exists | true when permission exists | enabled when unreadCount > 0 | yes | Engineering Recommendation | Medium | 前端只控制体验，后端仍需鉴权 |
 
 ## Example: Test Spec Entry
 

@@ -10,6 +10,7 @@ Single authority for unit test plan output. `SKILL.md` Unit Test Case Generation
 - [Other Stacks](#other-stacks)
 - [Git Ignore Note](#git-ignore-note)
 - [Per-Case Required Fields](#per-case-required-fields)
+- [Unit vs E2E Boundary](#unit-vs-e2e-boundary)
 - [Test Quality Rules](#test-quality-rules)
 - [Unit Test Case Plan Structure](#unit-test-case-plan-structure)
 
@@ -30,7 +31,9 @@ Prefer colocated specs:
 | Source | Spec |
 | --- | --- |
 | `ComponentName.vue` | `ComponentName.spec.ts` |
+| `ComponentName.js` | `ComponentName.spec.js` |
 | `useXxx.ts` | `useXxx.spec.ts` |
+| `useXxx.js` | `useXxx.spec.js` |
 | `services.ts` | `services.spec.ts` |
 | `mock.ts` / data module | `mock.spec.ts` |
 | `PageName.vue` | `PageName.spec.ts` |
@@ -48,10 +51,13 @@ Prefer colocated specs:
 | Source | Spec |
 | --- | --- |
 | `ComponentName.tsx` | `ComponentName.spec.tsx` |
+| `ComponentName.jsx` | `ComponentName.spec.jsx` |
 | `useXxx.ts` | `useXxx.spec.ts` |
+| `useXxx.js` | `useXxx.spec.js` |
 | `services.ts` | `services.spec.ts` |
 | `mock.ts` / data module | `mock.spec.ts` |
 | `PageName.tsx` | `PageName.spec.tsx` |
+| `PageName.jsx` | `PageName.spec.jsx` |
 
 For Next.js projects, reuse the existing Jest or Vitest setup when present; otherwise recommend Vitest with the same Testing Library stack and mark the choice as `Engineering Recommendation`.
 
@@ -78,6 +84,10 @@ Each test case must include:
 
 At spec level, `Tested Object`, `Test Type`, and `Mock Data` describe the default scope for that `.spec` file. Individual cases may override those values only when the exception is explicit in the `Test Cases` field.
 
+## Unit vs E2E Boundary
+
+This template is for unit and component test planning. Do not include E2E, responsive screenshot, or visual regression cases as unit tests. When those checks are needed, list them separately as Playwright, browser QA, or manual QA follow-ups.
+
 ## Test Quality Rules
 
 - Do not output only a wide summary table. Explain what each `.spec.ts`, `.spec.tsx`, `.spec.js`, or `.spec.jsx` should test.
@@ -90,6 +100,12 @@ At spec level, `Tested Object`, `Test Type`, and `Mock Data` describe the defaul
 - If corresponding components do not exist yet, use recommended component names but mark them as `Engineering Recommendation` or `Assumption`.
 - If existing component names are detected, use the existing names.
 - Make the test plan specific enough that another AI agent can create spec files directly from it.
+
+## Mock Data Quality
+
+- Cover every enum value with at least one mock item when enum-driven rendering or policy is in scope.
+- Include empty, invalid/error, and boundary-state mock data for lists, forms, services, and policy rules when relevant.
+- Mark mock-only assumptions clearly and map them back to `MOCK-XXX`, `ENUM-XXX`, `STATE-XXX`, or `API-XXX` IDs when available.
 
 ## Unit Test Case Plan Structure
 

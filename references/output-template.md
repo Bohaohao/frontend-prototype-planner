@@ -55,6 +55,11 @@ Plan Scale signals:
 
 Keep the section numbering from this template even when sections are omitted, and list omitted sections with reasons at the end of the plan as required by Plan Scale.
 
+Omitted sections format:
+
+| Section | Reason Omitted | Revisit Trigger |
+| --- | --- | --- |
+
 ## Template
 
 Use this structure unless the user requests a different format:
@@ -145,6 +150,24 @@ If no frontend project exists, describe the recommended stack and explain why.
 | ID | Candidate | Extract As | Reuse Sites | Responsibility | Props / Inputs | Events / Outputs | State Ownership | API Dependencies | Enum Dependencies | Acceptance Cases | Extraction Reason | Do Not Over-Abstract | Source | Confidence |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
+For wide component plans, use a summary table plus per-ID detail blocks instead of one unreadable 10+ column table:
+
+| ID | Candidate | Extract As | Responsibility | Decision |
+| --- | --- | --- | --- | --- |
+
+### COMP-001 Component Name
+- Reuse sites:
+- Props / inputs:
+- Events / outputs:
+- State ownership:
+- API dependencies:
+- Enum dependencies:
+- Acceptance cases:
+- Extraction reason:
+- Do not over-abstract:
+- Source:
+- Confidence:
+
 ### Do Not Extract Yet
 | Item | Keep Local Because | Revisit When | Source | Confidence |
 | --- | --- | --- | --- | --- |
@@ -208,6 +231,11 @@ Describe local state, shared state, global state, route state, cache state, stat
 | Module | Mock Needed | Mock Shape | Switch To Real API | Notes |
 | --- | --- | --- | --- | --- |
 
+Mock data quality rules:
+- Cover every enum value with at least one mock item when enum-driven rendering or policy is in scope.
+- Include empty, invalid/error, and boundary-state mock data where those states affect UI behavior.
+- Label mock-only assumptions and link them to `MOCK-XXX`, `ENUM-XXX`, `STATE-XXX`, or `API-XXX` IDs when available.
+
 ## 20. Non-Functional Requirements
 | Area | Requirement | Frontend Strategy | Risk | Source | Confidence |
 | --- | --- | --- | --- | --- | --- |
@@ -228,6 +256,8 @@ src/
 ```
 | Path | Responsibility | Notes |
 | --- | --- | --- |
+
+Adapt the tree to the detected stack and existing project conventions. For React, prefer `pages/`, `components/`, `hooks/`, `services/`, `types/`, and `__tests__` or colocated specs when already used. For Vue, prefer the existing `views/`, `components/`, `composables/`, `services/`, `stores/`, and colocated spec conventions.
 
 ## 23. Milestone Plan
 | ID | Phase | Goal | Tasks | Deliverable | Can Demo |
