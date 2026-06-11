@@ -1,6 +1,6 @@
 ---
 name: frontend-prototype-planner
-description: Turn frontend requirements — prototypes, PRDs, screenshots, flowcharts, links, files, or plain-text descriptions — into implementation-ready, verifiable Markdown frontend construction plans. Use for page/component/form/state/API/permission/data-model decomposition, technical implementation directions, option matrices, component extraction plans, mock and integration strategy, milestones, executable task cards, unit test case planning, .spec.ts planning, Vitest test plans, Testing Library plans, and test task cards. Planning only by default; never modifies project files unless implementation is explicitly requested. 适用于：分析前端原型、PRD、截图、流程图，输出前端建设方案、施工任务卡拆分与单元测试用例规划。
+description: Turn frontend prototypes, PRDs, screenshots, flowcharts, links, files, or plain-text requirements into implementation-ready Markdown construction plans, executable task cards, and unit-test blueprints. Use whenever the user asks how to build, split, estimate, schedule, choose frontend architecture, decompose pages/components/forms/state/API/permissions/data models, plan mocks, or add test cases. Planning only by default; never modifies project files unless implementation is explicitly requested. Not for pixel-perfect design restoration or direct code fixes. 适用于：前端原型/PRD/截图分析、建设方案、施工任务卡、排期/工作量评估、技术选型、组件怎么拆、单元测试用例规划。
 ---
 
 # Frontend Prototype Planner

@@ -1,0 +1,131 @@
+{
+  "name": "frontend-prototype-planner trigger eval",
+  "version": 1,
+  "description": "Positive and negative trigger samples for the skill description.",
+  "target": {
+    "positiveRate": 0.9,
+    "negativeRate": 0.9
+  },
+  "cases": [
+    {
+      "id": "TRIG-P-001",
+      "query": "分析这个后台首页原型，输出前端建设方案和实现路径。",
+      "expected": "trigger",
+      "reason": "Frontend prototype planning request."
+    },
+    {
+      "id": "TRIG-P-002",
+      "query": "把这个 PRD 拆成可执行的前端施工任务卡。",
+      "expected": "trigger",
+      "reason": "Task card decomposition request."
+    },
+    {
+      "id": "TRIG-P-003",
+      "query": "这个组件怎么拆，哪些应该抽成公共组件？",
+      "expected": "trigger",
+      "reason": "Component decomposition planning."
+    },
+    {
+      "id": "TRIG-P-004",
+      "query": "根据这些截图帮我估算前端工作量并给排期。",
+      "expected": "trigger",
+      "reason": "Frontend estimation and scheduling."
+    },
+    {
+      "id": "TRIG-P-005",
+      "query": "为刚才的任务卡补充单元测试用例清单。",
+      "expected": "trigger",
+      "reason": "Unit test blueprint generation."
+    },
+    {
+      "id": "TRIG-P-006",
+      "query": "这个审批流页面需要哪些状态机和权限矩阵？",
+      "expected": "trigger",
+      "reason": "State and permission planning."
+    },
+    {
+      "id": "TRIG-P-007",
+      "query": "看这个流程图，输出前端页面、API、mock 和联调策略。",
+      "expected": "trigger",
+      "reason": "Frontend construction plan from flowchart."
+    },
+    {
+      "id": "TRIG-P-008",
+      "query": "帮我为这个 React 页面规划组件测试和 spec 文件映射。",
+      "expected": "trigger",
+      "reason": "Frontend test planning."
+    },
+    {
+      "id": "TRIG-P-009",
+      "query": "这个管理端模块做技术选型，给出 option matrix。",
+      "expected": "trigger",
+      "reason": "Frontend technical option planning."
+    },
+    {
+      "id": "TRIG-P-010",
+      "query": "把完整原型拆成页面、路由、数据模型和开发里程碑。",
+      "expected": "trigger",
+      "reason": "System-level frontend planning."
+    },
+    {
+      "id": "TRIG-N-001",
+      "query": "按照 Mockplus 设计稿做像素级还原。",
+      "expected": "do_not_trigger",
+      "reason": "Pixel-perfect design restoration belongs to design restoration skills."
+    },
+    {
+      "id": "TRIG-N-002",
+      "query": "直接修改代码实现这个页面。",
+      "expected": "do_not_trigger",
+      "reason": "Direct implementation request, not planning-only by default."
+    },
+    {
+      "id": "TRIG-N-003",
+      "query": "修复这个 Vitest 报错。",
+      "expected": "do_not_trigger",
+      "reason": "Debugging an existing test failure."
+    },
+    {
+      "id": "TRIG-N-004",
+      "query": "帮我设计后端接口和数据库表。",
+      "expected": "do_not_trigger",
+      "reason": "Backend API/database design is out of scope unless frontend contract planning."
+    },
+    {
+      "id": "TRIG-N-005",
+      "query": "优化这个 CSS，让视觉和截图一致。",
+      "expected": "do_not_trigger",
+      "reason": "Style implementation/restoration rather than planning."
+    },
+    {
+      "id": "TRIG-N-006",
+      "query": "运行 npm test 并修掉失败用例。",
+      "expected": "do_not_trigger",
+      "reason": "Code/test fixing workflow."
+    },
+    {
+      "id": "TRIG-N-007",
+      "query": "给这个接口文档写 OpenAPI schema。",
+      "expected": "do_not_trigger",
+      "reason": "API documentation task, not frontend planning."
+    },
+    {
+      "id": "TRIG-N-008",
+      "query": "把这个 Figma 视觉稿切成 HTML/CSS。",
+      "expected": "do_not_trigger",
+      "reason": "Direct frontend implementation from design."
+    },
+    {
+      "id": "TRIG-N-009",
+      "query": "帮我写一个登录页组件代码。",
+      "expected": "do_not_trigger",
+      "reason": "Direct code generation request."
+    },
+    {
+      "id": "TRIG-N-010",
+      "query": "排查这个 Node 服务启动失败。",
+      "expected": "do_not_trigger",
+      "reason": "Backend/runtime debugging."
+    }
+  ]
+}
