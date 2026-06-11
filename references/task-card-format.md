@@ -1,0 +1,110 @@
+# Task Card Format
+
+Single authority for task card output. `SKILL.md` workflow step 11 defines when to produce task cards and how to split them; this file defines what each card must contain and look like.
+
+## Field Enums
+
+- Priority: `P0`, `P1`, `P2`
+- Estimated complexity: `S`, `M`, `L`
+- Task type: `foundation`, `page`, `component`, `service`, `state`, `interaction`, `api`, `mock`, `test`, `integration`, `polish`
+- Owner recommendation: `frontend-agent`, `integration-agent`, `visual-agent`, `test-agent`
+
+## Required Fields
+
+Every task card must include:
+
+- Stable task ID, such as `TASK-001`
+- Task title
+- Priority
+- Estimated complexity
+- Task type
+- Scope boundary
+- Source requirement IDs or page/module IDs
+- Dependencies
+- Inputs required
+- Implementation instructions
+- Deliverables
+- Acceptance criteria
+- Verification method
+- Parallelization notes
+- Owner recommendation
+
+## Detailed Task Card Format
+
+Every detailed task card must use this format:
+
+```markdown
+### TASK-XXX｜Task Title
+
+| Field | Content |
+| --- | --- |
+| Priority / Complexity / Type | P0 / M / component |
+| Scope Boundary | Included scope and explicitly excluded scope. |
+| Source IDs | PAGE-001, REGION-001, API-001 |
+| Dependencies | TASK-001, TASK-002 |
+| Inputs Required | Concrete data, routes, DTOs, APIs, design references, assets, or decisions needed. |
+| Implementation Instructions | Concrete implementation guidance, including suggested files, components, services, composables, state, and important edge cases when project context is available. |
+| Deliverables | Concrete artifacts such as components, services, types, mocks, styles, routes, tests, docs, or configuration. |
+| Acceptance Criteria | Observable and testable criteria, not vague quality statements. |
+| Verification Method | Concrete checks such as build, typecheck, unit/component/e2e test, browser route visit, screenshot check, mock error-state test, or manual QA step. |
+| Parallelization Notes | Whether it can run in parallel, what it blocks, and what write scopes must stay separate. |
+| Owner Recommendation | frontend-agent / integration-agent / visual-agent / test-agent |
+```
+
+## Field Quality Requirements
+
+- `Scope Boundary` must say what the task owns and what it must not implement.
+- `Inputs Required` must name concrete source data, DTOs, assets, routes, APIs, or design references.
+- `Implementation Instructions` must be specific enough for an AI coding agent to start without rereading the whole prototype.
+- `Deliverables` must name actual artifacts, not activities.
+- `Acceptance Criteria` must include at least 3 checkable criteria for `M` or `L` tasks and at least 2 for `S` tasks.
+- `Verification Method` must include at least one automated check when the project has scripts; otherwise include concrete browser or manual verification steps.
+- `Parallelization Notes` must identify blockers and whether write scopes are disjoint.
+
+## Acceptance Criteria Examples
+
+These examples are illustrative only. Never copy their domain content into a real plan.
+
+Good acceptance criteria:
+
+- "访问 `/learner/dashboard?tab=flow` 后展示本周任务时间线、通过线 80、当前分数 68。"
+- "点击 `查看高分对照` 打开抽屉；抽屉显示高分话术、评分维度和关闭按钮。"
+- "`npm run build` 通过，无 TypeScript 错误。"
+
+Bad acceptance criteria:
+
+- "页面效果良好。"
+- "交互正常。"
+- "代码结构合理。"
+
+## Task-Card-Only Document Structure
+
+When task cards are the primary deliverable and no full construction plan was requested, use this shortened structure:
+
+```markdown
+# Implementation Task Cards
+
+## 1. Task Target
+- Target scope:
+- Scope resolution rule:
+- Source requirement IDs:
+- Assumptions:
+
+## 2. Dependency And Parallelization
+| Stage | Goal | Tasks | Can Run In Parallel | Blocking Dependencies |
+| --- | --- | --- | --- | --- |
+
+## 3. Detailed Executable Task Cards
+[Use one detailed section per task card. Do not use a single wide task table.]
+
+## 4. Minimal Deliverable Slice
+State the smallest useful implementation path using task IDs.
+
+## 5. Acceptance Test Matrix
+| Case ID | Scenario | Steps | Expected Result | Priority |
+| --- | --- | --- | --- | --- |
+
+## 6. Risks And Open Questions
+| ID | Type | Description | Impact | Blocking |
+| --- | --- | --- | --- | --- |
+```

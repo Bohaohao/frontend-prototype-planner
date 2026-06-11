@@ -34,8 +34,7 @@ __pycache__/
 *.local.md
 *.generated.md
 
-# Optional generated test specs.
-# Keep commented by default because real projects often should commit tests.
-# Uncomment in a consuming project only when generated specs are temporary artifacts.
-# *.spec.ts
-# *.test.ts
+# Local planning and session artifacts
+.claude/
+notes/
+优化方案/

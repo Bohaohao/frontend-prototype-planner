@@ -1,6 +1,6 @@
 ---
 name: frontend-prototype-planner
-description: Analyze frontend requirements, prototypes, PRDs, screenshots, flowcharts, links, files, or feature descriptions, then produce implementation-ready, verifiable Markdown frontend construction plans. Use for page/component/form/state/API/permission/data-model decomposition, technical implementation directions, option matrices, component extraction plans, mock and integration strategy, milestones, executable task cards, unit test case planning, .spec.ts planning, Vitest test plans, Testing Library plans, and test task cards.
+description: Turn frontend requirements — prototypes, PRDs, screenshots, flowcharts, links, files, or plain-text descriptions — into implementation-ready, verifiable Markdown frontend construction plans. Use for page/component/form/state/API/permission/data-model decomposition, technical implementation directions, option matrices, component extraction plans, mock and integration strategy, milestones, executable task cards, unit test case planning, .spec.ts planning, Vitest test plans, Testing Library plans, and test task cards. Planning only by default; never modifies project files unless implementation is explicitly requested. 适用于：分析前端原型、PRD、截图、流程图，输出前端建设方案、施工任务卡拆分与单元测试用例规划。
 ---
 
 # Frontend Prototype Planner
@@ -21,7 +21,7 @@ Reading project files is allowed when needed to understand whether the current d
 
 Treat these as document-output requests only:
 
-- Planning, architecture, requirement analysis, requirement decomposition, implementation strategy, construction方案, 构建方案
+- Planning, architecture, requirement analysis, requirement decomposition, implementation strategy, construction plan, 实施方案, 构建方案
 - 生成实施文档, 落地方案, 开发计划, 技术方案, 前端建设方案
 - 生成单元测试用例, 生成组件测试用例, 生成 `.spec.ts` 文件规划, 生成可落地的测试代码计划, 为任务卡补充测试用例, 单元测试怎么拆, 测试用例清单, 测试任务卡
 - Review, refine, improve, or split a plan without asking to change code
@@ -32,9 +32,17 @@ Treat these as explicit implementation requests:
 - 实现测试代码, 生成测试文件, 写入工程, 修改 `package.json`
 - Implement this, build it, code it, apply changes, generate files, start development
 
-If the wording is ambiguous, choose document output. Ask a concise clarification only when the next step would require modifying files and the user's intent is genuinely unclear.
+Saving the plan, task cards, or test plan itself as a standalone Markdown document (for example under `docs/`) when the user explicitly asks to save or export it is a document deliverable, not implementation. Never touch source code, configuration, or dependency files for that purpose.
 
-When producing unit test plans, default to test design, test file planning, test task cards, or test code plans only. Do not edit project files, write `.spec.ts` files, update `.gitignore`, install dependencies, or modify `package.json` unless the user explicitly requests implementation. If running in Plan Mode, only plan and never modify files.
+If the wording is ambiguous, choose document output. Ask a concise clarification only when the next step would require modifying files and the user's intent is genuinely unclear. If running in a plan-only or read-only mode (such as Claude Code Plan Mode or a read-only approval mode), only plan and never modify files.
+
+This boundary applies to every workflow step and mode below. Mode sections do not restate it.
+
+## Output Language
+
+Write all descriptive plan content in the language of the user's request. If the request and the requirement materials use different languages, follow the request; default to Chinese when the conversation is mostly Chinese.
+
+Keep structural identifiers stable for cross-agent handoff regardless of language: stable IDs such as `PAGE-001`, enum values such as `P0` / `M` / `foundation`, file paths, code, commands, and template field names stay in English.
 
 ## Inputs
 
@@ -48,6 +56,24 @@ Accept any of the following requirement sources:
 - Mixed sources, such as PRD plus screenshots plus user notes
 
 If a source cannot be accessed, state what is unavailable, list the missing information, explain impact, and continue with the available material. Do not block unless the missing content prevents meaningful analysis.
+
+## Plan Scale
+
+Before producing output, classify the requirement scale and size the plan to it:
+
+- `component`: a single component, widget, or small interaction.
+- `page`: one page or one small flow.
+- `module`: a multi-page module or feature area.
+- `system`: a complex business system, such as supply chain, approval, order, work order, finance, publishing, inventory, or admin platforms.
+
+Scaling rules:
+
+- Always include the core sections: source materials, source coverage audit, project context, requirement overview and decomposition, technical implementation directions for non-trivial features, data and API needs, interaction states, acceptance test matrix, risks, and assumptions.
+- Include other sections only when they have real content at the chosen scale. Use the Section Applicability table in `references/output-template.md`.
+- At `system` scale, the engineering matrices listed in workflow step 9 are mandatory even when source material is incomplete; fill them with assumptions, confidence, risks, and missing inputs.
+- Below `system` scale, omit sections that would contain only assumption filler. End the plan with a one-line list of omitted sections and why each was omitted.
+- If the user explicitly requests specific sections or the full output template, the user's request overrides these scale-based omission rules.
+- State the chosen scale at the start of the plan.
 
 ## Workflow
 
@@ -139,6 +165,7 @@ Use stable IDs for requirement items so later agents can reference them:
 - `PAGE-001`
 - `FLOW-001`
 - `REGION-001`
+- `RULE-001`
 - `TECH-001`
 - `COMP-001`
 - `FORM-001`
@@ -150,6 +177,7 @@ Use stable IDs for requirement items so later agents can reference them:
 - `MOCK-001`
 - `CASE-001`
 - `TASK-001`
+- `SPEC-001`
 - `RISK-001`
 - `ASM-001`
 
@@ -268,7 +296,7 @@ Include Do Not Extract Yet items when appropriate. Explain what should not be ab
 
 ### 9. Add Required Engineering Matrices
 
-For complex business systems, especially supply chain, approval, order, work order, finance, publishing, inventory, or admin systems, include these matrices even when the source is incomplete:
+At `system` scale — complex business systems such as supply chain, approval, order, work order, finance, publishing, inventory, or admin platforms — include these matrices even when the source is incomplete:
 
 - Source Coverage Audit
 - Implementation Readiness
@@ -288,7 +316,7 @@ For complex business systems, especially supply chain, approval, order, work ord
 - Suggested File Structure
 - Non-Functional Requirements
 
-If a section has insufficient source material, still include it with assumptions, confidence, risks, and missing inputs.
+If a matrix has insufficient source material at `system` scale, still include it with assumptions, confidence, risks, and missing inputs. At smaller scales, follow the Plan Scale rules instead.
 
 ### 10. Design Contract-Level API Drafts
 
@@ -313,6 +341,8 @@ Include TypeScript DTO or interface examples when useful. Use existing project t
 ### 11. Task Card Decomposition Mode
 
 When the user asks to split, decompose, arrange, or convert the analyzed requirements into implementation task cards, generate executable task cards as part of this skill.
+
+Before outputting any task card, read `references/task-card-format.md`. It is the single authority for required fields, field enums, the per-card format, field quality requirements, and acceptance criteria examples.
 
 #### Task Target Resolution
 
@@ -339,31 +369,11 @@ AI-agent-friendly means:
 - Avoid task cards so large that they contain multiple unrelated components, API contracts, and test flows.
 - Avoid task cards so small that they are merely "create file", "add variable", or "rename component", unless such mechanical tasks are useful setup work.
 
-#### Task Card Required Fields
-
-Every task card must include:
-
-- Stable task ID, such as `TASK-001`
-- Task title
-- Priority: `P0`, `P1`, `P2`
-- Estimated complexity: `S`, `M`, `L`
-- Task type: `foundation`, `page`, `component`, `service`, `state`, `interaction`, `api`, `mock`, `test`, `integration`, `polish`
-- Scope boundary
-- Source requirement IDs or page/module IDs
-- Dependencies
-- Inputs required
-- Implementation instructions
-- Deliverables
-- Acceptance criteria
-- Verification method
-- Parallelization notes
-- Owner recommendation, such as `frontend-agent`, `integration-agent`, `visual-agent`, or `test-agent`
-
 #### Detailed Task Card Output Is Mandatory
 
 When the user explicitly asks for task cards, construction task cards, implementation task cards, development task cards, "施工任务卡", "开发任务卡", "落地任务卡", "拆成任务卡", "任务卡呢", or similar wording, task cards are the primary deliverable.
 
-In that case, do not compress task cards into a single wide table. Output each task card as its own detailed section with all required fields filled. A compact dependency table is allowed before the cards, but it is not a substitute for the detailed cards.
+In that case, do not compress task cards into a single wide table. Output each task card as its own detailed section with all required fields filled, following `references/task-card-format.md`. A compact dependency table is allowed before the cards, but it is not a substitute for the detailed cards.
 
 Use the finest practical AI-agent-friendly granularity by default:
 
@@ -371,43 +381,6 @@ Use the finest practical AI-agent-friendly granularity by default:
 - Split page shell, data model, service/mock, each major region, each non-trivial interaction, integration, visual QA, and tests into separate cards when they can be worked independently.
 - Prefer more small, executable cards over fewer broad cards when a broad card would require unrelated components, APIs, and tests.
 - Do not split into meaningless mechanical tasks such as "create file" unless that setup task unlocks parallel implementation.
-
-Every detailed task card must use this format:
-
-```markdown
-### TASK-XXX｜Task Title
-
-| Field | Content |
-| --- | --- |
-| Priority / Complexity / Type | P0 / M / component |
-| Scope Boundary | Included scope and explicitly excluded scope. |
-| Source IDs | PAGE-001, REGION-001, API-001 |
-| Dependencies | TASK-001, TASK-002 |
-| Inputs Required | Concrete data, routes, DTOs, APIs, design references, assets, or decisions needed. |
-| Implementation Instructions | Concrete implementation guidance, including suggested files, components, services, composables, state, and important edge cases when project context is available. |
-| Deliverables | Concrete artifacts such as components, services, types, mocks, styles, routes, tests, docs, or configuration. |
-| Acceptance Criteria | Observable and testable criteria, not vague quality statements. |
-| Verification Method | Concrete checks such as build, typecheck, unit/component/e2e test, browser route visit, screenshot check, mock error-state test, or manual QA step. |
-| Parallelization Notes | Whether it can run in parallel, what it blocks, and what write scopes must stay separate. |
-| Owner Recommendation | frontend-agent / integration-agent / visual-agent / test-agent |
-```
-
-Field quality requirements:
-
-- `Scope Boundary` must say what the task owns and what it must not implement.
-- `Inputs Required` must name concrete source data, DTOs, assets, routes, APIs, or design references.
-- `Implementation Instructions` must be specific enough for an AI coding agent to start without rereading the whole prototype.
-- `Deliverables` must name actual artifacts, not activities.
-- `Acceptance Criteria` must include at least 3 checkable criteria for `M` or `L` tasks and at least 2 for `S` tasks.
-- `Verification Method` must include at least one automated check when the project has scripts; otherwise include concrete browser or manual verification steps.
-- `Parallelization Notes` must identify blockers and whether write scopes are disjoint.
-
-Anti-compression rules:
-
-- Never output only milestone bullets or a summary task table when the user requested task cards.
-- Never replace detailed task cards with a compact table for brevity.
-- Never use vague task titles such as "完善页面", "处理交互", "优化样式", or "对接接口" without precise scope, implementation instructions, and acceptance criteria.
-- If response length is constrained, prioritize detailed task cards over lower-priority architecture sections. Omit optional planning sections before omitting required task-card fields.
 
 #### Task Splitting Principles
 
@@ -424,53 +397,11 @@ Prefer disjoint write scopes when tasks may run in parallel. Explicitly mark tas
 
 #### Task Card Acceptance Criteria Rules
 
-Acceptance criteria must be observable and testable.
-
-Good acceptance criteria:
-
-- "访问 `/learner/dashboard?tab=flow` 后展示本周任务时间线、通过线 80、当前分数 68。"
-- "点击 `查看高分对照` 打开抽屉；抽屉显示高分话术、评分维度和关闭按钮。"
-- "`npm run build` 通过，无 TypeScript 错误。"
-
-Bad acceptance criteria:
-
-- "页面效果良好。"
-- "交互正常。"
-- "代码结构合理。"
+Acceptance criteria must be observable and testable. Follow the good and bad examples in `references/task-card-format.md`. Never accept vague criteria such as "页面效果良好" or "交互正常".
 
 #### Task Card Output Modes
 
-If the user only asks "怎么拆", "拆成任务卡", "给任务卡", "施工任务卡", "开发任务卡", "落地任务卡", or "任务卡呢", output the detailed task cards directly instead of the full construction plan.
-
-For direct task-card output, use this shortened document structure:
-
-```markdown
-# Implementation Task Cards
-
-## 1. Task Target
-- Target scope:
-- Scope resolution rule:
-- Source requirement IDs:
-- Assumptions:
-
-## 2. Dependency And Parallelization
-| Stage | Goal | Tasks | Can Run In Parallel | Blocking Dependencies |
-| --- | --- | --- | --- | --- |
-
-## 3. Detailed Executable Task Cards
-[Use one detailed section per task card. Do not use a single wide task table.]
-
-## 4. Minimal Deliverable Slice
-State the smallest useful implementation path using task IDs.
-
-## 5. Acceptance Test Matrix
-| Case ID | Scenario | Steps | Expected Result | Priority |
-| --- | --- | --- | --- | --- |
-
-## 6. Risks And Open Questions
-| ID | Type | Description | Impact | Blocking |
-| --- | --- | --- | --- | --- |
-```
+If the user only asks "怎么拆", "拆成任务卡", "给任务卡", "施工任务卡", "开发任务卡", "落地任务卡", or "任务卡呢", output the detailed task cards directly instead of the full construction plan, using the Task-Card-Only Document Structure in `references/task-card-format.md`.
 
 If the user asks for a full construction plan, include detailed task cards in the `Implementation Task Breakdown` section. Do not replace them with a single summary table.
 
@@ -481,13 +412,20 @@ If the user asks for project management style output, include both:
 - Detailed executable task card sections
 - Parallelization / dependency sequence
 
-Do not modify project files while producing task cards unless the user explicitly asks to write the task cards into a file.
+#### Anti-Compression Rules
+
+- Never output only milestone bullets or a summary task table when the user requested task cards.
+- Never replace detailed task cards with a compact table for brevity.
+- Never use vague task titles such as "完善页面", "处理交互", "优化样式", or "对接接口" without precise scope, implementation instructions, and acceptance criteria.
+- If response length is constrained, prioritize detailed task cards over lower-priority architecture sections. Omit optional planning sections before omitting required task-card fields. When even that is not enough, switch to the Oversized Plans delivery split in workflow step 14 instead of omitting required content.
 
 ### 12. Unit Test Case Generation Mode
 
 When the user asks for unit test cases, component test cases, `.spec.ts` planning, a test code plan, Vitest tests, Testing Library tests, test cases for task cards, 单元测试怎么拆, 测试用例清单, or 测试任务卡, generate a Unit Test Case Plan.
 
-Default boundary: output test design, test file planning, test task cards, and test code plans only. Do not create `.spec.ts` files, edit `.gitignore`, install dependencies, update scripts, or change project files unless the user explicitly asks for implementation.
+Default boundary per the Execution Boundary: output test design, test file planning, test task cards, and test code plans only.
+
+Before outputting the test plan, read `references/test-plan-template.md`. It is the single authority for recommended test stacks per framework, spec file naming conventions, per-case required fields, the Git Ignore Note, and the Unit Test Case Plan output structure.
 
 #### Test Context Detection
 
@@ -503,29 +441,9 @@ Before producing a test plan, inspect the current project context:
 - Existing `test/setup` files
 - Framework: Vue, React, Svelte, Angular, Next.js, Nuxt, or other
 
-If the user says the project is Vue, React, or another stack, still read `package.json` to confirm. If the project is Vue 3 + Vite + TypeScript and no unit test stack exists, recommend `Vitest`, `@vue/test-utils`, and `happy-dom`.
+If the user says the project is Vue, React, or another stack, still read `package.json` to confirm.
 
-#### Vue Unit Test Defaults
-
-For Vue 3 + Vite + TypeScript projects without an existing unit test environment, the plan must recommend:
-
-- Dependency install: `npm install -D vitest @vue/test-utils happy-dom`
-- Scripts: `"test:unit": "vitest run"` and `"test:unit:watch": "vitest"`
-- Vite config: `test.environment = "happy-dom"`
-
-If Vitest, Jest, or another test stack already exists, follow the existing framework and do not recommend duplicate dependencies.
-
-For Vue 3, prefer colocated specs:
-
-| Source | Spec |
-| --- | --- |
-| `ComponentName.vue` | `ComponentName.spec.ts` |
-| `useXxx.ts` | `useXxx.spec.ts` |
-| `services.ts` | `services.spec.ts` |
-| `mock.ts` / data module | `mock.spec.ts` |
-| `PageName.vue` | `PageName.spec.ts` |
-
-When planning generated `.spec.ts` files, include a Git Ignore Note. If the user's workflow treats generated specs as temporary artifacts, recommend adding the relevant `.spec.ts` pattern to git ignore. If the user explicitly says `.spec.ts` files should be git-ignored, include that recommendation in the plan. Do not edit `.gitignore` unless explicitly requested.
+If a test framework already exists, reuse it and do not recommend duplicate dependencies. If none exists, recommend the matching stack defaults from `references/test-plan-template.md` — for example the Vue defaults for Vue 3 + Vite + TypeScript projects and the React defaults for React + Vite + TypeScript projects.
 
 #### Test Plan Content Requirements
 
@@ -542,31 +460,15 @@ When the user asks for executable unit test cases, include:
 - Executable verification commands
 - Risks and assumptions
 
-Each test case must include:
-
-- Case ID
-- Tested object
-- Test type: `data`, `service`, `composable`, `component`, `page integration`, or `policy`
-- Mock data
-- Steps
-- Assertions
-- Priority: `P0`, `P1`, `P2`
-- Whether it depends on test environment configuration
+Each test case must include the per-case required fields defined in `references/test-plan-template.md`.
 
 #### Task Card Linkage
 
-If construction task cards already exist in the conversation, derive the unit test plan from them and preserve task Source IDs or Requirement IDs:
+If construction task cards already exist in the conversation, derive the unit test plan from the actual cards and preserve their task IDs and requirement IDs. Map every spec file and major test case back to the related task IDs and requirement IDs when available.
 
-- `TASK-001`: types, data, mock, or service
-- `TASK-002`: route or tab synchronization
-- `TASK-003`: page shell loading/error/empty
-- `TASK-004`: API service and data refresh
-- `TASK-005` to `TASK-009`: business components
-- `TASK-010`: state, permission, or action policy
-- `TASK-011`: integration DTO mapping
-- `TASK-012`: responsive and visual acceptance
+When grouping specs, map by task type rather than task number: `foundation` and `service` tasks map to data, service, and mock specs; `page` tasks map to page integration specs; `component` tasks map to component specs; `state` tasks map to policy and state specs; `integration` tasks map to DTO mapping specs.
 
-Map every spec file and major case back to related task IDs and requirement IDs when available.
+Never assume a fixed task numbering scheme. Always use the task IDs that actually exist in the conversation.
 
 #### Test Quality Rules
 
@@ -574,7 +476,8 @@ Map every spec file and major case back to related task IDs and requirement IDs 
 - Do not mix E2E, visual regression, or responsive screenshot testing into unit tests. Mark those separately as Playwright, browser QA, or manual QA follow-ups.
 - Do not recommend broad snapshot testing unless the user explicitly asks.
 - For Vue components, prioritize visible text, props rendering, emitted events, loading/error/empty states, and permission disabled states.
-- For composables, prioritize state changes, request success/failure, retry behavior, and strategy function return values.
+- For React components, prioritize rendered output via Testing Library queries, user interactions via `user-event`, hook state changes, loading/error/empty states, and permission disabled states.
+- For composables and hooks, prioritize state changes, request success/failure, retry behavior, and strategy function return values.
 - For services, prioritize DTO mapping, error-code mapping, and mock/real API boundary.
 - If corresponding components do not exist yet, use recommended component names but mark them as `Engineering Recommendation` or `Assumption`.
 - If existing component names are detected, use the existing names.
@@ -582,59 +485,7 @@ Map every spec file and major case back to related task IDs and requirement IDs 
 
 #### Unit Test Case Output
 
-When the user asks mainly for unit test cases or test task cards, output this structure directly:
-
-```markdown
-# Unit Test Case Plan
-
-## 1. Test Target
-- Target module:
-- Source requirement IDs:
-- Related task cards:
-- In scope:
-- Out of scope:
-
-## 2. Detected Test Context
-| Item | Result | Evidence | Impact |
-| --- | --- | --- | --- |
-
-## 3. Required Test Dependencies
-| Dependency | Required | Reason | Install Command |
-| --- | --- | --- | --- |
-
-## 4. Suggested Test File Map
-| Source Module / Component | Spec File | Test Type | Related Task IDs | Priority |
-| --- | --- | --- | --- | --- |
-
-## 5. Detailed Test Cases
-### SPEC-001 - filename.spec.ts
-| Field | Content |
-| --- | --- |
-| Tested Object | |
-| Test Type | |
-| Related Requirements | |
-| Related Tasks | |
-| Mock Data | |
-| Test Cases | Case IDs, steps, assertions, priority, and environment dependency. |
-| Assertions | |
-| Edge Cases | |
-| Verification Command | |
-
-## 6. Test Data And Mock Strategy
-| Mock Object | Used By | Required Fields | Notes |
-| --- | --- | --- | --- |
-
-## 7. Execution Commands
-- npm run test:unit
-- npm run build
-
-## 8. Git Ignore Note
-- If generated `.spec.ts` files should stay out of version control, recommend the exact `.gitignore` pattern. Do not edit files unless explicitly requested.
-
-## 9. Risks And Assumptions
-| ID | Type | Description | Impact | Blocking |
-| --- | --- | --- | --- | --- |
-```
+When the user asks mainly for unit test cases or test task cards, output the Unit Test Case Plan structure from `references/test-plan-template.md` directly instead of the full construction plan.
 
 ### 13. Identify Risks And Open Questions
 
@@ -654,7 +505,7 @@ Separate true blockers from non-blocking assumptions.
 
 ### 14. Output The Construction Plan
 
-Produce the final answer as a Markdown document. Do not modify project files during this planning workflow unless the user explicitly requests implementation or file changes.
+Read `references/output-template.md` and produce the final answer as a Markdown document following that template, sized according to Plan Scale. When unsure about expected depth, ID usage, or source/confidence marking, read `references/example-plan.md` for format calibration.
 
 The document must be optimized for AI continuation:
 
@@ -668,337 +519,22 @@ The document must be optimized for AI continuation:
 - Prefer actionable engineering instructions
 - Include enough context for another agent to continue implementation without asking repeated questions
 
-## Output Template
+#### Oversized Plans
 
-Use this structure unless the user requests a different format:
+If the full plan would not fit in a single response — very large PRDs, many modules, `system` scale with full matrices — do not silently truncate tables or drop required fields. Instead:
 
-````markdown
-# Frontend Construction Plan
-
-## 1. Source Materials
-| ID | Type | Source | Status | Notes |
-| --- | --- | --- | --- | --- |
-
-## 2. Source Coverage Audit
-| Source Item | Parsed | Evidence | Missing / Not Parsed | Impact |
-| --- | --- | --- | --- | --- |
-
-## 3. Project Context
-### 3.1 Directory Assessment
-- Current directory:
-- Is frontend project:
-- Evidence:
-
-### 3.2 Detected Stack
-| Category | Detected Value | Evidence | Impact |
-| --- | --- | --- | --- |
-
-### 3.3 Technical Boundary
-Describe which existing project conventions must be followed.
-If no frontend project exists, describe the recommended stack and explain why.
-
-## 4. Implementation Readiness
-| Area | Readiness | Reason | Needed Before Development |
-| --- | --- | --- | --- |
-
-## 5. Requirement Overview
-### 5.1 Business Goal
-
-### 5.2 User Roles Or Actors
-
-### 5.3 Core Flows
-| ID | Flow | Entry | Main Steps | Result | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- |
-
-## 6. Requirement Decomposition
-### 6.1 Outline
-
-### 6.2 Detailed Outline
-
-### 6.3 Fine-Grained Rules
-| ID | Object | Rule | Source | Confidence | Notes |
-| --- | --- | --- | --- | --- | --- |
-
-## 7. Page And Route Design
-| ID | Page | Suggested Route | Responsibility | Entry | Dependencies | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-
-## 8. Page Detail
-### PAGE-001 Page Name
-| Region | Component | Content | Actions | Data Source | State |
-| --- | --- | --- | --- | --- | --- |
-
-## 9. Feature Technical Implementation Direction
-| ID | Feature | Technical Direction | Frontend Boundary | Backend Boundary | Alternatives | Risks | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-### TECH-001 Feature Name
-- Recommended approach:
-- Data flow:
-- Rendering / interaction strategy:
-- Component / composable / service split:
-- Backend dependency:
-- Technical option matrix:
-  | Decision Area | Option | How It Works | Pros | Cons | Prerequisites | Cost | Risks | Recommended When | Decision For This Project | Decision Rationale |
-  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-- Rejected or risky alternatives:
-- Edge cases:
-- Performance notes:
-- Security limitations:
-- Linked APIs:
-- Linked components:
-- Linked states / enums:
-- Acceptance checks:
-- Source:
-- Confidence:
-
-## 10. Component Extraction Plan
-| ID | Candidate | Extract As | Reuse Sites | Responsibility | Props / Inputs | Events / Outputs | State Ownership | API Dependencies | Enum Dependencies | Acceptance Cases | Extraction Reason | Do Not Over-Abstract | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-### Do Not Extract Yet
-| Item | Keep Local Because | Revisit When | Source | Confidence |
-| --- | --- | --- | --- | --- |
-
-## 11. Form Design
-| ID | Form | Field | Type | Required | Validation | Default | Source | Confidence | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-## 12. Data Model Design
-| Entity | Field | Type | Required | Enum / Format | Description | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-
-## 13. Enum Design
-| Enum | Value | Label | Meaning | Used By | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- |
-
-## 14. State Machine Design
-| ID | Entity | Current State | Page / Location | Available Action | Permission | Next State | Side Effects | Source | Confidence | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-## 15. Permission Matrix
-| Permission ID | Action | Page | Entity State | Visible | Enabled | Backend Required | Source | Confidence | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-Permission design principles:
-- Do not hard-code role names unless the source explicitly requires them.
-- Prefer frontend consumption of backend permission codes.
-- Button visibility and enabled state should be determined by permission, entity state, data ownership, and feature flags when applicable.
-- Backend permission validation remains mandatory. Frontend checks are experience controls, not security guarantees.
-
-## 16. Data And API Design
-| ID | Module | API / Data Source | Request Params | Response Data | Used By | Refresh Strategy | Source | Confidence | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-### API-001 API Name
-- Method:
-- Path:
-- Query:
-- Request Body:
-- Response:
-- Error Codes:
-- Used By:
-- Refresh Strategy:
-- Source:
-- Confidence:
-
-```ts
-interface ExampleDto {
-  id: string
-}
-```
-
-## 17. State And Communication Design
-Describe local state, shared state, global state, route state, cache state, state machine ownership, permission state, and component communication.
-
-## 18. Interaction States
-| ID | Scenario | Loading | Empty | Error | Disabled | Success | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-## 19. Mock And Integration Strategy
-| Module | Mock Needed | Mock Shape | Switch To Real API | Notes |
-| --- | --- | --- | --- | --- |
-
-## 20. Non-Functional Requirements
-| Area | Requirement | Frontend Strategy | Risk | Source | Confidence |
-| --- | --- | --- | --- | --- | --- |
-Cover browser compatibility, upload size, large table performance, security limitations, watermark limitations, accessibility basics, i18n extensibility, error tracking, operation logs, approval audit, and observability when relevant.
-
-## 21. Performance And Maintainability
-List specific decisions for rendering performance, request control, component splitting, lazy loading, memoization, caching, large list handling, and future extension.
-
-## 22. Suggested File Structure
-```text
-src/
-  views/
-  components/
-  services/
-  stores/
-  types/
-  constants/
-```
-| Path | Responsibility | Notes |
-| --- | --- | --- |
-
-## 23. Milestone Plan
-| Phase | Goal | Tasks | Deliverable | Can Demo |
-| --- | --- | --- | --- | --- |
-
-## 24. Implementation Task Breakdown
-
-### 24.1 Task Target
-
-- Target scope:
-- Scope resolution rule:
-- Default granularity:
-- Source requirement IDs:
-- Assumptions:
-
-### 24.2 Dependency And Parallelization
-
-| Stage | Goal | Tasks | Can Run In Parallel | Blocking Dependencies |
-| --- | --- | --- | --- | --- |
-
-### 24.3 Executable Task Cards
-
-Use detailed per-card sections by default. Do not use a single wide task table unless the user explicitly asks for a compact summary.
-
-#### TASK-001｜Task Title
-
-| Field | Content |
-| --- | --- |
-| Priority / Complexity / Type | P0 / M / foundation |
-| Scope Boundary | |
-| Source IDs | |
-| Dependencies | |
-| Inputs Required | |
-| Implementation Instructions | |
-| Deliverables | |
-| Acceptance Criteria | |
-| Verification Method | |
-| Parallelization Notes | |
-| Owner Recommendation | |
-
-#### TASK-002｜Task Title
-
-| Field | Content |
-| --- | --- |
-| Priority / Complexity / Type | |
-| Scope Boundary | |
-| Source IDs | |
-| Dependencies | |
-| Inputs Required | |
-| Implementation Instructions | |
-| Deliverables | |
-| Acceptance Criteria | |
-| Verification Method | |
-| Parallelization Notes | |
-| Owner Recommendation | |
-
-## 25. Unit Test Case Plan
-
-### 25.1 Test Target
-- Target module:
-- Source requirement IDs:
-- Related task cards:
-- In scope:
-- Out of scope:
-
-### 25.2 Detected Test Context
-| Item | Result | Evidence | Impact |
-| --- | --- | --- | --- |
-
-### 25.3 Required Test Dependencies
-| Dependency | Required | Reason | Install Command |
-| --- | --- | --- | --- |
-
-### 25.4 Suggested Test File Map
-| Source Module / Component | Spec File | Test Type | Related Task IDs | Priority |
-| --- | --- | --- | --- | --- |
-
-### 25.5 Detailed Test Cases
-#### SPEC-001 - filename.spec.ts
-| Field | Content |
-| --- | --- |
-| Tested Object | |
-| Test Type | |
-| Related Requirements | |
-| Related Tasks | |
-| Mock Data | |
-| Test Cases | Case IDs, steps, assertions, priority, and environment dependency. |
-| Assertions | |
-| Edge Cases | |
-| Verification Command | |
-
-### 25.6 Test Data And Mock Strategy
-| Mock Object | Used By | Required Fields | Notes |
-| --- | --- | --- | --- |
-
-### 25.7 Execution Commands
-- npm run test:unit
-- npm run build
-
-### 25.8 Git Ignore Note
-- If generated `.spec.ts` files should stay out of version control, recommend the exact `.gitignore` pattern. Do not edit files unless explicitly requested.
-
-## 26. Acceptance Test Matrix
-| Case ID | Scenario | Preconditions | Steps | Expected Result | Priority |
-| --- | --- | --- | --- | --- | --- |
-
-## 27. Risks And Open Questions
-| ID | Type | Description | Impact | Suggested Resolution | Blocking | Source | Confidence |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-
-## 28. Assumptions
-| ID | Assumption | Reason | Source | Confidence | Needs Confirmation |
-| --- | --- | --- | --- | --- | --- |
-````
+1. State the delivery split first, then deliver the plan module by module or section group by section group across consecutive responses, starting with the core sections and the highest-risk technical directions.
+2. Or offer to save the plan as one or more standalone Markdown document files, which is allowed per the Execution Boundary when the user explicitly agrees.
 
 ## Quality Bar
 
-Before finalizing, verify that:
+Before finalizing, verify these grouped checks:
 
-- No project files were modified unless the user explicitly requested implementation or file changes.
-- The source coverage audit identifies what was parsed, partially parsed, and not parsed.
-- Requirement-bearing images, flowcharts, screenshots, and table images were inspected visually or via OCR when possible.
-- Unparsed images, missing archives, login-blocked links, and dynamic-page gaps are listed as risks or blockers.
-- The plan follows the existing project stack when one exists.
-- The recommended stack is justified when no project exists.
-- Every major page has page regions, components, actions, and data dependencies.
-- Every form has fields and validation strategy.
-- Every non-trivial feature has a technical implementation direction, not just a requirement summary.
-- All technical nouns, engineering mechanisms, platform capabilities, integrations, and client/server tradeoffs found in the source materials are either deep-dived or explicitly marked as out of scope.
-- Watermark, media, upload, import, multilingual, approval, permission, large table, share/public-page, and any other detected technical features include frontend-backend boundary decisions.
-- Any technical decision with multiple plausible routes includes an option/tradeoff matrix, across rendering, state, APIs, caching, validation, permissions, media/upload, library choice, frontend-backend boundary, infrastructure, testing, and rollout when relevant.
-- If only one realistic route exists for a technical decision, the plan explains why alternatives are not practical.
-- Feature technical directions are linked to APIs, components, states or enums, and acceptance cases.
-- State-heavy entities have a state machine matrix.
-- Permission-heavy actions have a permission matrix.
-- Data entities and enums are explicit.
-- Non-trivial API dependencies include contract-level drafts and DTO examples when useful.
-- Component extraction is planned at page component, reusable business component, composable/hook, service module, and policy/strategy utility levels when relevant.
-- The plan explicitly says what should not be abstracted yet.
-- Extracted components reference source requirements, API IDs, enum IDs, state ownership, emitted events, and acceptance case IDs.
-- Component communication is explicit.
-- Mock and integration strategy is actionable.
-- Non-functional requirements are covered when relevant.
-- Acceptance tests cover key flows, states, permissions, errors, and edge cases.
-- Unit test plans inspect the current project test stack before recommending dependencies.
-- Unit test plans specify each `.spec.ts` file and what it should test, not only a wide summary table.
-- Vue 3 + Vite + TypeScript projects without an existing unit test stack recommend Vitest, `@vue/test-utils`, `happy-dom`, `test:unit` scripts, and `test.environment = "happy-dom"`.
-- Existing test frameworks are reused instead of recommending duplicate test stacks.
-- Unit test cases include case ID, tested object, test type, mock data, steps, assertions, priority, and environment dependency.
-- Unit test plans separate unit/component tests from E2E, visual regression, responsive screenshot tests, and manual QA.
-- Test file planning preserves related task IDs and requirement IDs when task cards or source IDs exist.
-- Milestones and tasks include priority, dependencies, deliverables, and acceptance criteria.
-- Task cards resolve the correct target scope: specified module when provided, otherwise full analyzed scope when requested or implied.
-- Task cards use AI-agent-friendly granularity by default.
-- Each task card has concrete dependencies, implementation instructions, deliverables, acceptance criteria, and verification.
-- Task cards are ordered by dependency and include parallelization guidance.
-- Task cards avoid vague work items and avoid bundling unrelated implementation areas.
-- Task cards are specific enough that another AI agent can implement them without rereading the full prototype.
-- Suggested file structure matches the detected project stack and conventions.
-- Performance and maintainability are addressed concretely.
-- Ambiguities are separated from confirmed requirements.
-- Every inferred route, API, component, state, enum, or file path has source and confidence.
-- The Markdown can be used directly by a human engineer or another AI agent.
+1. Boundary and language: no project files were created or modified unless explicitly requested; plan content language follows the user; structural IDs and enums stay in English.
+2. Coverage: the source coverage audit lists what was parsed, partially parsed, and not parsed; requirement-bearing images, flowcharts, and table images were inspected or explicitly listed as unparsed risks; login-blocked links, missing archives, and dynamic-page gaps are recorded as risks or blockers.
+3. Stack fit: the plan follows the detected project stack and conventions when a project exists; the recommended stack is justified when none exists; no duplicate frameworks or test stacks are introduced.
+4. Depth: every non-trivial feature and every extracted technical concept has a technical implementation direction with an explicit frontend/backend boundary, or is explicitly marked out of scope; every technical decision with multiple plausible routes has an option matrix, and single-route decisions explain why alternatives are not practical.
+5. Traceability: stable IDs are used throughout; every inferred route, API, component, state, enum, or file path carries source and confidence; assumptions are separated from confirmed requirements; technical directions link to APIs, components, states or enums, and acceptance cases.
+6. Scale completeness: all sections required by the chosen Plan Scale are present with real content; at `system` scale the step 9 matrices are all included; pages have regions, components, actions, and data dependencies; forms have fields and validation; state-heavy entities have state machines; permission-heavy actions have a permission matrix; component extraction states what not to abstract yet.
+7. Task executability: task cards follow the required format with all fields filled; scope resolution matches the user's wording; cards are dependency-ordered with parallelization guidance; acceptance criteria are observable and testable; another AI agent could implement each card without rereading the full prototype.
+8. Test quality: test plans reuse the detected test stack or recommend the matching defaults; every `.spec.ts` explains what it tests rather than appearing only in a summary table; unit tests are separated from E2E, visual regression, and manual QA; specs link back to actual task IDs and requirement IDs from the conversation.
