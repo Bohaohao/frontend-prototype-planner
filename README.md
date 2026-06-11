@@ -40,6 +40,8 @@ frontend-prototype-planner/
 ├── agents/
 │   └── openai.yaml                # Codex UI 元信息（Claude Code 自动忽略）
 ├── README.md                      # 中英双语使用说明
+├── LICENSE                        # MIT license
+├── .editorconfig                  # 编辑器默认格式
 ├── .gitignore                     # 仓库忽略规则
 └── .gitattributes                 # 文本换行规则
 ```
@@ -52,7 +54,7 @@ macOS / Linux:
 
 ```bash
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-git clone <your-repo-url> "${CODEX_HOME:-$HOME/.codex}/skills/frontend-prototype-planner"
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git "${CODEX_HOME:-$HOME/.codex}/skills/frontend-prototype-planner"
 ```
 
 Windows PowerShell:
@@ -60,7 +62,7 @@ Windows PowerShell:
 ```powershell
 $codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".codex" }
 New-Item -ItemType Directory -Force -Path (Join-Path $codexHome "skills") | Out-Null
-git clone <your-repo-url> (Join-Path $codexHome "skills\frontend-prototype-planner")
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git (Join-Path $codexHome "skills\frontend-prototype-planner")
 ```
 
 #### 方式二：下载 ZIP 后复制
@@ -93,14 +95,14 @@ macOS / Linux:
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone <your-repo-url> ~/.claude/skills/frontend-prototype-planner
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git ~/.claude/skills/frontend-prototype-planner
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force -Path (Join-Path $HOME ".claude\skills") | Out-Null
-git clone <your-repo-url> (Join-Path $HOME ".claude\skills\frontend-prototype-planner")
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git (Join-Path $HOME ".claude\skills\frontend-prototype-planner")
 ```
 
 项目级（仅当前项目可用）：把整个 `frontend-prototype-planner` 文件夹复制到项目的 `.claude/skills/frontend-prototype-planner`。
@@ -264,6 +266,8 @@ frontend-prototype-planner/
 ├── agents/
 │   └── openai.yaml                # Codex UI metadata (ignored by Claude Code)
 ├── README.md                      # Bilingual user guide
+├── LICENSE                        # MIT license
+├── .editorconfig                  # Editor defaults
 ├── .gitignore                     # Repository ignore rules
 └── .gitattributes                 # Text and line-ending rules
 ```
@@ -276,7 +280,7 @@ macOS / Linux:
 
 ```bash
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
-git clone <your-repo-url> "${CODEX_HOME:-$HOME/.codex}/skills/frontend-prototype-planner"
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git "${CODEX_HOME:-$HOME/.codex}/skills/frontend-prototype-planner"
 ```
 
 Windows PowerShell:
@@ -284,7 +288,7 @@ Windows PowerShell:
 ```powershell
 $codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME ".codex" }
 New-Item -ItemType Directory -Force -Path (Join-Path $codexHome "skills") | Out-Null
-git clone <your-repo-url> (Join-Path $codexHome "skills\frontend-prototype-planner")
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git (Join-Path $codexHome "skills\frontend-prototype-planner")
 ```
 
 #### Option 2: Download ZIP And Copy
@@ -317,14 +321,14 @@ macOS / Linux:
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone <your-repo-url> ~/.claude/skills/frontend-prototype-planner
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git ~/.claude/skills/frontend-prototype-planner
 ```
 
 Windows PowerShell:
 
 ```powershell
 New-Item -ItemType Directory -Force -Path (Join-Path $HOME ".claude\skills") | Out-Null
-git clone <your-repo-url> (Join-Path $HOME ".claude\skills\frontend-prototype-planner")
+git clone https://github.com/Bohaohao/frontend-prototype-planner.git (Join-Path $HOME ".claude\skills\frontend-prototype-planner")
 ```
 
 Project scope (current project only): copy the whole `frontend-prototype-planner` folder into `.claude/skills/frontend-prototype-planner` inside the project.

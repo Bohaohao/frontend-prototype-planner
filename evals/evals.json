@@ -1,0 +1,64 @@
+{
+  "name": "frontend-prototype-planner structural evals",
+  "version": 1,
+  "description": "Smoke eval cases with expected structural markers.",
+  "cases": [
+    {
+      "id": "EVAL-001",
+      "name": "page construction plan",
+      "prompt": "使用 $frontend-prototype-planner，分析 Vue 管理后台订单列表页需求，输出前端建设方案。",
+      "expectedMarkers": [
+        "Frontend Construction Plan",
+        "Plan scale",
+        "Source Coverage Audit",
+        "Requirement Decomposition",
+        "Acceptance Test Matrix"
+      ]
+    },
+    {
+      "id": "EVAL-002",
+      "name": "task-card direct output",
+      "prompt": "使用 $frontend-prototype-planner，把内容审核模块拆成前端施工任务卡。",
+      "expectedMarkers": [
+        "Implementation Task Cards",
+        "Task Target",
+        "Dependency And Parallelization",
+        "Detailed Executable Task Cards",
+        "Minimal Deliverable Slice"
+      ]
+    },
+    {
+      "id": "EVAL-003",
+      "name": "vue unit test plan",
+      "prompt": "使用 $frontend-prototype-planner，为 Vue 3 + Vite 任务卡生成单元测试用例计划。",
+      "expectedMarkers": [
+        "Unit Test Case Plan",
+        "Detected Test Context",
+        "Suggested Test File Map",
+        "Detailed Test Cases",
+        "Git Ignore Note"
+      ]
+    },
+    {
+      "id": "EVAL-004",
+      "name": "system scale plan",
+      "prompt": "使用 $frontend-prototype-planner，为一个供应链审批系统原型输出前端系统级建设方案。",
+      "expectedMarkers": [
+        "State Machine Design",
+        "Permission Matrix",
+        "Data Model Design",
+        "Mock And Integration Strategy",
+        "Milestone Plan"
+      ]
+    },
+    {
+      "id": "EVAL-005",
+      "name": "negative pixel restoration",
+      "prompt": "按照设计稿做像素级还原并直接改代码。",
+      "expectedMarkers": [
+        "do_not_trigger"
+      ],
+      "expectedBehavior": "The skill description should not be selected for pixel-perfect restoration or direct code implementation."
+    }
+  ]
+}
