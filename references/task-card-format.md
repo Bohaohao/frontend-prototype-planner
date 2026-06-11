@@ -2,6 +2,16 @@
 
 Single authority for task card output. `SKILL.md` Task Card Decomposition Mode defines when to produce task cards and how to split them; this file defines what each card must contain and look like.
 
+## Table Of Contents
+
+- [Field Enums](#field-enums)
+- [Required Fields](#required-fields)
+- [Detailed Task Card Format](#detailed-task-card-format)
+- [Field Quality Requirements](#field-quality-requirements)
+- [Anti-Compression Rules](#anti-compression-rules)
+- [Acceptance Criteria Examples](#acceptance-criteria-examples)
+- [Task-Card-Only Document Structure](#task-card-only-document-structure)
+
 ## Field Enums
 
 - Priority: `P0`, `P1`, `P2`
@@ -60,6 +70,13 @@ Every detailed task card must use this format:
 - `Acceptance Criteria` must include at least 3 checkable criteria for `M` or `L` tasks and at least 2 for `S` tasks.
 - `Verification Method` must include at least one automated check when the project has scripts; otherwise include concrete browser or manual verification steps.
 - `Parallelization Notes` must identify blockers and whether write scopes are disjoint.
+
+## Anti-Compression Rules
+
+- Never output only milestone bullets or a summary task table when the user requested task cards.
+- Never replace detailed task cards with a compact table for brevity.
+- Never use vague task titles such as "完善页面", "处理交互", "优化样式", or "对接接口" without precise scope, implementation instructions, and acceptance criteria.
+- If response length is constrained, prioritize detailed task cards over lower-priority architecture sections. Omit optional planning sections before omitting required task-card fields. When even that is not enough, switch to the Oversized Plans delivery split from `SKILL.md` Output The Construction Plan mode.
 
 ## Acceptance Criteria Examples
 

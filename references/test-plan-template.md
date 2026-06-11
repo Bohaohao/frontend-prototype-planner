@@ -2,6 +2,17 @@
 
 Single authority for unit test plan output. `SKILL.md` Unit Test Case Generation Mode defines when to produce the test plan and how to detect project context; this file defines the recommended stacks, naming conventions, per-case fields, and output structure.
 
+## Table Of Contents
+
+- [Framework Reuse Rule](#framework-reuse-rule)
+- [Vue Unit Test Defaults](#vue-unit-test-defaults)
+- [React Unit Test Defaults](#react-unit-test-defaults)
+- [Other Stacks](#other-stacks)
+- [Git Ignore Note](#git-ignore-note)
+- [Per-Case Required Fields](#per-case-required-fields)
+- [Test Quality Rules](#test-quality-rules)
+- [Unit Test Case Plan Structure](#unit-test-case-plan-structure)
+
 ## Framework Reuse Rule
 
 If Vitest, Jest, or another test stack already exists in the project, follow the existing framework, scripts, and conventions. Do not recommend duplicate or parallel test stacks.
@@ -66,6 +77,19 @@ Each test case must include:
 - Whether it depends on test environment configuration
 
 At spec level, `Tested Object`, `Test Type`, and `Mock Data` describe the default scope for that `.spec` file. Individual cases may override those values only when the exception is explicit in the `Test Cases` field.
+
+## Test Quality Rules
+
+- Do not output only a wide summary table. Explain what each `.spec.ts`, `.spec.tsx`, `.spec.js`, or `.spec.jsx` should test.
+- Do not mix E2E, visual regression, or responsive screenshot testing into unit tests. Mark those separately as Playwright, browser QA, or manual QA follow-ups.
+- Do not recommend broad snapshot testing unless the user explicitly asks.
+- For Vue components, prioritize visible text, props rendering, emitted events, loading/error/empty states, and permission disabled states.
+- For React components, prioritize rendered output via Testing Library queries, user interactions via `user-event`, hook state changes, loading/error/empty states, and permission disabled states.
+- For composables and hooks, prioritize state changes, request success/failure, retry behavior, and strategy function return values.
+- For services, prioritize DTO mapping, error-code mapping, and mock/real API boundary.
+- If corresponding components do not exist yet, use recommended component names but mark them as `Engineering Recommendation` or `Assumption`.
+- If existing component names are detected, use the existing names.
+- Make the test plan specific enough that another AI agent can create spec files directly from it.
 
 ## Unit Test Case Plan Structure
 

@@ -211,27 +211,7 @@ When revising an existing plan, preserve published IDs.
 
 ### 5. Produce A Fine-Grained Functional Inventory
 
-Create a normalized feature inventory covering:
-
-- Pages and routes
-- Page responsibilities
-- Page regions and operations
-- Components
-- Forms
-- Tables and lists
-- Filters and search
-- Modals, drawers, popovers, previews, and secondary panels
-- Charts or visualization modules
-- Upload, download, import, export, and batch behavior
-- User actions
-- Entity states and transitions
-- Data models and enumerations
-- API dependencies and DTO shapes
-- Permission points
-- Validation rules
-- Error, empty, loading, disabled, and success states
-- Responsive or platform-specific behavior
-- Audit, logging, tracking, and operation history needs
+Normalize the extraction from source reading into a fine-grained inventory. Reuse the dimensions from source extraction and add only implementation-facing detail: route/page ownership, region operations, component candidates, data/API dependencies, permission points, interaction states, responsive needs, and audit or tracking needs.
 
 Keep each item specific enough that another AI agent or engineer can implement it without re-reading the original PRD in full.
 
@@ -241,34 +221,7 @@ Design the implementation plan according to the detected project stack when a fr
 
 If no frontend project exists, choose a reasonable architecture and justify it with requirement complexity, delivery cost, maintainability, ecosystem fit, and future extensibility.
 
-The architecture design must cover:
-
-- Route structure
-- Page-level module boundaries
-- Page region composition
-- Component hierarchy
-- Component props and emitted events
-- Parent-child communication
-- Cross-page or global state management
-- State machine strategy for status-heavy domains
-- Permission and action availability strategy
-- Data model and enum organization
-- Form model structure
-- Form validation strategy
-- API module organization
-- Request and response typing
-- Error handling strategy
-- Loading and empty-state handling
-- Data caching or refresh strategy
-- Table/list pagination strategy
-- Mock and integration strategy
-- Performance optimization
-- Avoiding unnecessary rendering or repeated requests
-- Code splitting or lazy loading where useful
-- Suggested file structure and file responsibilities
-- Reusable utilities, hooks, composables, or services
-- Scalability and later iteration cost
-- Testing and acceptance focus
+Cover route and module boundaries, region and component composition, props/events, local and shared state, state-machine and permission strategy, model/enum/form/API organization, request typing, error/loading/empty handling, caching and pagination, mock and integration strategy, performance, file structure, reusable utilities, scalability, testing, and acceptance focus.
 
 Avoid introducing new frameworks, libraries, or abstractions when the existing project already has suitable patterns.
 
@@ -278,19 +231,7 @@ For every non-trivial feature module, include a Technical Implementation Directi
 
 Each technical direction must cover frontend rendering strategy, backend dependency boundary, recommended implementation option, rejected or risky alternatives, data flow, component/composable/service split, edge cases, performance/security limitations, and acceptance checks.
 
-Feature Pattern Trigger: do not treat the following as a closed keyword list. While reading requirements, actively extract any technical noun, engineering mechanism, platform capability, integration point, or client/server tradeoff. Each extracted technical concept that affects implementation must receive a practical technical deep-dive with a feasible direction for the current project.
-
-Trigger a deep-dive for terms and mechanisms such as:
-
-- Media and asset processing: watermark, image processing, video, audio, file preview, thumbnail, compression, transcoding, OCR, PDF, canvas, print, download protection
-- Data exchange: import, export, Excel, CSV, upload, download, batch operation, validation preview, error file, async task
-- Content and language: multilingual content, i18n, translation, proofreading, locale fallback, rich text, template rendering
-- Workflow and state: approval, workflow, state machine, task queue, audit log, rollback, recall, publish, shelf on/off
-- Security and access: permission, role, capability code, row-level action, public share, token, expiry, unauthenticated route, watermark/security boundary
-- Data-heavy UI: large table, virtual scroll, pagination, tree table, drag-and-drop, chart, dashboard, realtime refresh, WebSocket/SSE
-- Platform integration: CDN/OSS, payment, map, notification, email/SMS, third-party auth, SSO, browser API, native bridge, mini-program, Electron
-
-For any other technical term not listed here, infer the underlying implementation problem and produce an explicit, realistic implementation direction. Avoid generic advice. State what runs in the frontend, what must be handled by backend or infrastructure, what can be mocked, what is risky, and what should be verified.
+Use `references/feature-patterns.md` to recognize technical feature patterns and assign `TECH-XXX` IDs. Do not treat the reference as a closed keyword list; infer the implementation problem behind any technical term.
 
 Technical Option Matrix: do not limit option tradeoffs to fixed feature directions. Whenever any technical decision has more than one plausible route, include an Option Matrix. Cover alternatives across rendering strategy, state management, component extraction, API shape, caching, validation, permissions, upload/media handling, library vs native implementation, frontend vs backend boundary, infrastructure dependency, testing strategy, and rollout strategy when relevant.
 
@@ -418,10 +359,7 @@ If the user asks for project management style output, include both:
 
 #### Anti-Compression Rules
 
-- Never output only milestone bullets or a summary task table when the user requested task cards.
-- Never replace detailed task cards with a compact table for brevity.
-- Never use vague task titles such as "完善页面", "处理交互", "优化样式", or "对接接口" without precise scope, implementation instructions, and acceptance criteria.
-- If response length is constrained, prioritize detailed task cards over lower-priority architecture sections. Omit optional planning sections before omitting required task-card fields. When even that is not enough, switch to the Oversized Plans delivery split in Output The Construction Plan mode instead of omitting required content.
+Compressed task cards are not executable. Follow the anti-compression rules in `references/task-card-format.md`; if space is constrained, use the Oversized Plans delivery split instead of omitting required task-card fields.
 
 ### 12. Unit Test Case Generation Mode
 
@@ -435,17 +373,7 @@ Direct output skips the full construction plan document, not test context detect
 
 #### Test Context Detection
 
-Before producing a test plan, inspect the current project context:
-
-- `package.json`
-- `vite.config.*`
-- `tsconfig.*`
-- `src/`
-- Existing test dependencies
-- Existing `vitest`, `jest`, `playwright`, or `cypress`
-- Existing test scripts
-- Existing `test/setup` files
-- Framework: Vue, React, Svelte, Angular, Next.js, Nuxt, or other
+Before producing a test plan, inspect project indicators such as `package.json`, build and TypeScript config, `src/`, existing test dependencies, scripts, setup files, and framework evidence.
 
 If the user says the project is Vue, React, or another stack, still read `package.json` to confirm.
 
@@ -478,16 +406,7 @@ Never assume a fixed task numbering scheme. Always use the task IDs that actuall
 
 #### Test Quality Rules
 
-- Do not output only a wide summary table. Explain what each `.spec.ts` should test.
-- Do not mix E2E, visual regression, or responsive screenshot testing into unit tests. Mark those separately as Playwright, browser QA, or manual QA follow-ups.
-- Do not recommend broad snapshot testing unless the user explicitly asks.
-- For Vue components, prioritize visible text, props rendering, emitted events, loading/error/empty states, and permission disabled states.
-- For React components, prioritize rendered output via Testing Library queries, user interactions via `user-event`, hook state changes, loading/error/empty states, and permission disabled states.
-- For composables and hooks, prioritize state changes, request success/failure, retry behavior, and strategy function return values.
-- For services, prioritize DTO mapping, error-code mapping, and mock/real API boundary.
-- If corresponding components do not exist yet, use recommended component names but mark them as `Engineering Recommendation` or `Assumption`.
-- If existing component names are detected, use the existing names.
-- Make the test plan specific enough that another AI agent can create `.spec.ts` files directly from it.
+Follow the quality rules in `references/test-plan-template.md`: explain what each `.spec` tests, keep unit tests separate from E2E/browser QA, avoid broad snapshots unless requested, and make the plan specific enough for another AI agent to create the files directly.
 
 #### Unit Test Case Output
 

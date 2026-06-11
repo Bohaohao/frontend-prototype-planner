@@ -2,6 +2,11 @@
 
 Single authority for the full construction plan structure. `SKILL.md` Output The Construction Plan mode defines when to produce the plan and how to size it via Plan Scale; this file defines the section layout and table schemas.
 
+## Table Of Contents
+
+- [Section Applicability](#section-applicability)
+- [Template](#template)
+
 ## Section Applicability
 
 Include a section only when the chosen Plan Scale and its condition apply. `all` means every scale. `page+`, `module+` mean that scale and larger.

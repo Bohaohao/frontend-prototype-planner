@@ -6,6 +6,10 @@
 
 ## 中文
 
+### TL;DR
+
+克隆或复制完整 `frontend-prototype-planner/` 目录到 Codex 或 Claude Code 的 skills 目录，新开会话后使用。它默认只输出前端建设方案、任务卡和测试规划；模板细节维护在 `references/`。
+
 `frontend-prototype-planner` 是一个通用 Agent Skill，同一份格式同时兼容 OpenAI Codex 与 Anthropic Claude Code，用于把前端原型、PRD、截图、流程图、页面模块、任务卡或纯文本需求，转化为可实施、可验证、可交接的前端建设方案。
 
 它默认是**规划型 skill**：只输出 Markdown 方案、任务卡、测试用例计划或 `.spec.ts` 文件规划，不会修改你的工程文件。只有当用户明确要求“写代码 / 生成文件 / 写入工程 / 修改 package.json / 落地代码 / 实现测试代码”时，才进入代码实现。
@@ -31,6 +35,7 @@ frontend-prototype-planner/
 │   ├── output-template.md         # 完整建设方案模板与章节适用范围
 │   ├── task-card-format.md        # 任务卡字段与格式的权威定义
 │   ├── test-plan-template.md      # 测试计划模板与各栈默认配置
+│   ├── feature-patterns.md        # 技术特征触发词与 TECH-ID 关联规则
 │   └── example-plan.md            # 格式校准示例（仅供对照）
 ├── agents/
 │   └── openai.yaml                # Codex UI 元信息（Claude Code 自动忽略）
@@ -184,40 +189,7 @@ git clone <your-repo-url> (Join-Path $HOME ".claude\skills\frontend-prototype-pl
 - 是否已有 Vitest / Jest / Playwright / Cypress
 - 当前工程是 Vue、React、Svelte、Angular、Next.js、Nuxt 或其他栈
 
-如果是 Vue 3 + Vite + TypeScript 且没有单元测试环境，默认推荐：
-
-```bash
-npm install -D vitest @vue/test-utils happy-dom
-```
-
-并建议：
-
-```json
-{
-  "scripts": {
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
-  }
-}
-```
-
-以及在 `vite.config.ts` 中配置：
-
-```ts
-test: {
-  environment: "happy-dom"
-}
-```
-
-如果是 React + Vite + TypeScript 且没有单元测试环境，默认推荐：
-
-```bash
-npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
-```
-
-并在 `vite.config.ts` 中配置 `test.environment = "jsdom"`，以及引入 `@testing-library/jest-dom` 的 setup 文件。
-
-如果工程已有测试框架，优先沿用现有测试框架，不重复推荐依赖。其他栈的默认值见 `references/test-plan-template.md`。
+如果工程已有测试框架，优先沿用现有测试框架，不重复推荐依赖。Vue、React 和其他栈的默认依赖、脚本、环境与 spec 命名规则只维护在 `references/test-plan-template.md`。
 
 ### 校验 Skill
 
@@ -251,11 +223,11 @@ Skill is valid!
 
 - 保持 `SKILL.md` 的 frontmatter 只有 `name` 和 `description`，这是 Codex 与 Claude Code 的双平台安全交集；确需扩展时只能从 `license` / `allowed-tools` / `metadata` 中选（Codex 校验器白名单），Claude 专属字段（`version`、`model`、`disable-model-invocation` 等）会让 `quick_validate.py` 直接失败。
 - 修改 `SKILL.md` 后运行 `quick_validate.py`。
-- 修改触发场景后，同步更新 `agents/openai.yaml`。
+- 修改触发场景后，同步更新 `agents/openai.yaml`，并核对 `short_description` / `default_prompt` 是否仍与 `SKILL.md` frontmatter 一致。
 - 模板、任务卡格式、测试栈默认值只在 `references/` 对应文件中维护一份，`SKILL.md` 只保留引用，避免多处定义漂移。
-- 修改 `references/test-plan-template.md` 的测试栈默认值后，同步更新 README 中的对应示例。
 - 安装或复制时必须携带完整目录（含 `references/`），SKILL.md 会按需读取这些文件。
 - 如果复制到全局 skills 目录，重启 Codex 后再测试。
+- 发布或同步时排除开发期资产：`.git/`、`.claude/`、`优化方案/`、`notes/`，以及仅用于本仓库开发的 `evals/`、`tools/`。
 - 不要把临时输出、生成的测试文件、构建产物或本地缓存提交到仓库。
 
 ---
@@ -287,6 +259,7 @@ frontend-prototype-planner/
 │   ├── output-template.md         # Full plan template and section applicability
 │   ├── task-card-format.md        # Single authority for task card fields and format
 │   ├── test-plan-template.md      # Test plan template and per-stack defaults
+│   ├── feature-patterns.md        # Technical feature triggers and TECH-ID linkage
 │   └── example-plan.md            # Format calibration example (reference only)
 ├── agents/
 │   └── openai.yaml                # Codex UI metadata (ignored by Claude Code)
@@ -443,40 +416,7 @@ Before producing the test plan, it should inspect:
 - Existing Vitest / Jest / Playwright / Cypress setup
 - Whether the project is Vue, React, Svelte, Angular, Next.js, Nuxt, or another stack
 
-For Vue 3 + Vite + TypeScript projects without a unit test setup, it recommends:
-
-```bash
-npm install -D vitest @vue/test-utils happy-dom
-```
-
-Suggested scripts:
-
-```json
-{
-  "scripts": {
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
-  }
-}
-```
-
-Suggested `vite.config.ts` test environment:
-
-```ts
-test: {
-  environment: "happy-dom"
-}
-```
-
-For React + Vite + TypeScript projects without a unit test setup, it recommends:
-
-```bash
-npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
-```
-
-with `test.environment = "jsdom"` in `vite.config.ts` and a setup file that imports `@testing-library/jest-dom`.
-
-If the project already has a test framework, the skill should reuse it and avoid duplicate dependencies. Defaults for other stacks live in `references/test-plan-template.md`.
+If the project already has a test framework, the skill should reuse it and avoid duplicate dependencies. Vue, React, and other stack defaults, scripts, environments, and spec naming rules live only in `references/test-plan-template.md`.
 
 ### Validate The Skill
 
@@ -510,9 +450,9 @@ The `name` / `description` constraints checked by `quick_validate.py` are exactl
 
 - Keep the `SKILL.md` frontmatter limited to `name` and `description` — the safe cross-platform intersection for Codex and Claude Code. If extra fields are ever needed, pick only from `license` / `allowed-tools` / `metadata` (the Codex validator allowlist); Claude-specific fields such as `version`, `model`, or `disable-model-invocation` make `quick_validate.py` fail.
 - Run `quick_validate.py` after changing `SKILL.md`.
-- Update `agents/openai.yaml` when trigger behavior changes.
+- Update `agents/openai.yaml` when trigger behavior changes, and keep its `short_description` / `default_prompt` aligned with `SKILL.md` frontmatter.
 - Maintain templates, the task card format, and test stack defaults in their single `references/` file; `SKILL.md` only points to them, so definitions cannot drift apart.
-- After changing test stack defaults in `references/test-plan-template.md`, update the matching examples in this README.
 - Always install or copy the full directory including `references/`; `SKILL.md` reads those files on demand.
 - Restart Codex after copying the skill into the global skills directory.
+- Exclude development-only assets from release and sync output: `.git/`, `.claude/`, `优化方案/`, `notes/`, `evals/`, and `tools/` when applicable.
 - Do not commit temporary outputs, generated test files, build artifacts, or local caches.
